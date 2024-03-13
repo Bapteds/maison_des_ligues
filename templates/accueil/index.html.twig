@@ -1,39 +1,59 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Accueil{% endblock %}
+{% block title %}Accueil
+{% endblock %}
 
 {% block content %}
-    <div class="bg-gray-200 h-[99.5%] rounded-md w-[100%] shadow-sm flex flex-col items-center justify-center">
-        <!-- TOP OF PAGE -->
-        <div class="bg-green-200 w-[99.5%] h-[34.5%] rounded-md"></div>
-        <!-- BOTTOM OF PAGE -->
-        <div class=" w-[100%] h-[65%] flex flex-row justify-around items-center">
-        <!-- Atelier -->
-            <div class="w-[49.5%] h-[99%] bg-zinc-300 shadow-inner  rounded-md  flex flex-col">
-                <div class="bg-gray-300 rounded-md border-b h-[6%] flex flex-row items-center">
-                    <div class="h-[100%] w-[50%] flex items-center"><h2 class=" pl-4 font-semibold text-xl text-gray-800  ">Présentation des différents ateliers disponibles</h2></div>
-                    <div class="h-[100%] w-[50%] flex justify-end items-center pr-3"><a class=" font-semibold text-xl  h-[70%] w-[30%] pt-1 rounded-lg text-center bg-blue-500  text-white hover:scale-105 duration-200 hover:bg-blue-600 hover:text-gray-200"  href="#ateliers">En savoir plus</a></div>
-                </div>
-                <div class="h-[94%] w-[100%] flex flex-row items-center justify-around">
-                    <div class="  w-[50%] h-[99.5%]  rounded-l-md flex items-center justify-center flex-col">
-                        <div class=" h-[90%] w-[98%]  bg-gray-200 flex justify-center ">
-                            <p class="tracking-wide leading-relaxed font-semibold pl-1 text-justify w-[96%] pt-2">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Malesuada fames ac turpis egestas integer eget aliquet. Mauris cursus mattis molestie a. Semper auctor neque vitae tempus quam pellentesque nec nam aliquam. Egestas egestas fringilla phasellus faucibus scelerisque eleifend donec pretium vulputate. Aliquam ut porttitor leo a diam sollicitudin tempor. Magna sit amet purus gravida. Elementum sagittis vitae et leo duis ut diam. Est velit egestas dui id ornare arcu odio. Adipiscing elit ut aliquam purus sit. Quis vel eros donec ac. Sed elementum tempus egestas sed sed risus pretium quam vulputate. Pellentesque id nibh tortor id aliquet. Tincidunt dui ut ornare lectus sit amet est placerat in.
+	<div class="h-[100%] flex items-center">
+		<div
+			class="bg-gray-200 h-[97%] rounded-md w-[100%] shadow-sm flex flex-col items-center justify-center">
+			<!-- TOP OF PAGE -->
+			<div class="bg-green-200 w-[99.5%] h-[34.5%] rounded-md"></div>
+			<!-- BOTTOM OF PAGE -->
+			<div
+				class=" w-[100%] h-[65%] flex flex-row justify-around items-center">
+				<!-- Atelier -->
+				<div class="w-[49.5%] h-[99%] bg-zinc-300 shadow-inner  rounded-md  flex flex-col">
+					<div class="bg-gray-300 rounded-md border-b h-[6%] flex flex-row items-center">
+						<div class="h-[100%] w-[70%]  flex items-center">
+							<h2 class=" pl-4 font-semibold text-xl text-gray-800  ">Présentation des différents ateliers disponibles:
+							</h2>
+						</div>
+						<!--    <div class="h-[100%] w-[30%] flex justify-end items-center pr-3"><a class=" font-semibold text-md flex items-center justify-center h-[70%] w-[90%]  rounded-lg text-center bg-blue-500  text-white hover:scale-105 duration-200 hover:bg-blue-600 hover:text-gray-200"  href="#ateliers">En savoir plus</a></div>-->
+					</div>
+					<div class="h-[94%] w-[100%] flex flex-row items-center justify-around ">
+						<div class="  w-[50%] h-[99.5%]  rounded-l-md flex items-center justify-center flex-col">
+							<div class=" h-[90%] w-[98%]  bg-gray-200 flex justify-center overflow-y-scroll">
+								<p class="tracking-wide leading-relaxed font-semibold pl-1 text-justify w-[96%] pt-2">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Malesuada fames ac turpis egestas integer eget aliquet. Mauris cursus mattis molestie a. Semper auctor neque vitae tempus quam pellentesque nec nam aliquam. Egestas egestas fringilla phasellus faucibus scelerisque eleifend donec pretium vulputate. Aliquam ut porttitor leo a diam sollicitudin tempor. Magna sit amet purus gravida. Elementum sagittis vitae et leo duis ut diam. Est velit egestas dui id ornare arcu odio. Adipiscing elit ut aliquam purus sit. Quis vel eros donec ac. Sed elementum tempus egestas sed sed risus pretium quam vulputate. Pellentesque id nibh tortor id aliquet. Tincidunt dui ut ornare lectus sit amet est placerat in.
+																		
+																		Faucibus pulvinar elementum integer enim neque volutpat ac tincidunt. Molestie at elementum eu facilisis. Sit amet commodo nulla facilisi nullam vehicula. Enim praesent elementum facilisis leo vel fringilla est. Ac turpis egestas maecenas pharetra. Mattis enim ut tellus elementum sagittis vitae et. Commodo elit at imperdiet dui accumsan sit. Lectus nulla at volutpat diam ut. Laoreet id donec ultrices tincidunt arcu non. Adipiscing bibendum est ultricies integer. Turpis in eu mi bibendum neque egestas congue quisque egestas. Leo a diam sollicitudin tempor.</p>
 
-Faucibus pulvinar elementum integer enim neque volutpat ac tincidunt. Molestie at elementum eu facilisis. Sit amet commodo nulla facilisi nullam vehicula. Enim praesent elementum facilisis leo vel fringilla est. Ac turpis egestas maecenas pharetra. Mattis enim ut tellus elementum sagittis vitae et. Commodo elit at imperdiet dui accumsan sit. Lectus nulla at volutpat diam ut. Laoreet id donec ultrices tincidunt arcu non. Adipiscing bibendum est ultricies integer. Turpis in eu mi bibendum neque egestas congue quisque egestas. Leo a diam sollicitudin tempor.</p>
-                        
-                        </div>
-                        <div class="h-[10%] w-[100%] flex justify-center items-center pr-3">
-                            <a class=" font-semibold text-xl  h-[50%] w-[30%] pt-1 rounded-lg text-center bg-blue-500  text-white hover:scale-105 duration-200 hover:bg-blue-600 hover:text-gray-200"  href="#ateliers">En savoir plus</a>
-                        </div>
-                
+							</div>
+							<div class="h-[10%] w-[100%] flex justify-center items-center pr-3">
+								<a class=" font-semibold text-xl  h-[50%] w-[70%] flex items-center justify-center rounded-lg text-center bg-blue-500  text-white hover:scale-105 duration-200 hover:bg-blue-600 hover:text-gray-200" href="#ateliers">En savoir plus</a>
+							</div>
+
+						</div>
+						<div class="w-[50%] h-[99.5%]  rounded-r-md flex items-center justify-center border-l border-gray-600 ">
+							<img src={{ asset('build/images/escrime_acc.jpg') }} class="rounded-lg w-[98%] h-[98%]">
+						</div>
+					</div>
+
+				</div>
+				<!-- Hotels -->
+				<div class="w-[49.5%] h-[99%] bg-zinc-300 shadow-inner  rounded-md  flex flex-col">
+					<div class="bg-gray-300 rounded-md border-b h-[6%] flex flex-row items-center">
+						<div class="h-[100%] w-[70%]  flex items-center">
+							<h2 class=" pl-4 font-semibold text-xl text-gray-800  ">Types de logements:
+							</h2>
+						</div>
+						<!--    <div class="h-[100%] w-[30%] flex justify-end items-center pr-3"><a class=" font-semibold text-md flex items-center justify-center h-[70%] w-[90%]  rounded-lg text-center bg-blue-500  text-white hover:scale-105 duration-200 hover:bg-blue-600 hover:text-gray-200"  href="#ateliers">En savoir plus</a></div>-->
+					</div>
+					<div class="h-[94%] w-[100%] flex flex-row items-center justify-around">
+                    
                     </div>
-                    <div class="w-[50%] h-[99.5%]  rounded-r-md flex items-center justify-center border-l border-gray-600 ">
-                        <img src={{ asset('build/images/escrime_acc.jpg') }} class="rounded-lg w-[98%] h-[98%]">
-                    </div>
-                </div>
-            
-            </div>
-            <div class="w-[49.5%] h-[99%] bg-zinc-300 shadow-inner  rounded-md  flex flex-col"></div>
-        </div>
-    </div>
+				</div>
+			</div>
+		</div>
+	</div>
 {% endblock %}

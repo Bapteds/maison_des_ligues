@@ -24,7 +24,7 @@ class Proposer
 
     #[ORM\ManyToOne(inversedBy: 'proposers')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?chambre $chambre = null;
+    private ?Chambre $chambre = null;
 
 
     public function getId(): ?int
@@ -56,12 +56,12 @@ class Proposer
         return $this;
     }
 
-    public function getChambre(): ?chambre
+    public function getChambre(): ?Chambre
     {
         return $this->chambre;
     }
 
-    public function setChambre(?chambre $chambre): static
+    public function setChambre(?Chambre $chambre): static
     {
         $this->chambre = $chambre;
 

@@ -27,7 +27,7 @@ class Vacation
 
     #[ORM\ManyToOne(inversedBy: 'vacations')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?atelier $atelier = null;
+    private ?Atelier $atelier = null;
 
 
     public function getId(): ?int
@@ -66,12 +66,12 @@ class Vacation
         return $result;
     }
 
-    public function getAtelier(): ?atelier
+    public function getAtelier(): ?Atelier
     {
         return $this->atelier;
     }
 
-    public function setAtelier(?atelier $atelier): static
+    public function setAtelier(?Atelier $atelier): static
     {
         $this->atelier = $atelier;
 

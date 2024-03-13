@@ -36,11 +36,8 @@ class Hotel
     #[ORM\Column(length: 255)]
     private ?string $mail = null;
 
-    #[ORM\OneToMany(mappedBy: 'hotel', targetEntity: nuite::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'hotel', targetEntity: Nuite::class, orphanRemoval: true)]
     private Collection $nuites;
-
-    #[ORM\OneToOne(mappedBy: 'hotel', cascade: ['persist', 'remove'])]
-    private ?Proposer $proposer = null;
 
     #[ORM\OneToMany(mappedBy: 'hotel', targetEntity: Proposer::class)]
     private Collection $proposers;
@@ -154,7 +151,7 @@ class Hotel
         return $this->nuites;
     }
 
-    public function addNuite(nuite $nuite): static
+    public function addNuite(Nuite $nuite): static
     {
         if (!$this->nuites->contains($nuite)) {
             $this->nuites->add($nuite);
@@ -164,7 +161,7 @@ class Hotel
         return $this;
     }
 
-    public function removeNuite(nuite $nuite): static
+    public function removeNuite(Nuite $nuite): static
     {
         if ($this->nuites->removeElement($nuite)) {
             // set the owning side to null (unless already changed)
@@ -176,22 +173,6 @@ class Hotel
         return $this;
     }
 
-    public function getProposer(): ?Proposer
-    {
-        return $this->proposer;
-    }
-
-    public function setProposer(Proposer $proposer): static
-    {
-        // set the owning side of the relation if necessary
-        if ($proposer->getHotel() !== $this) {
-            $proposer->setHotel($this);
-        }
-
-        $this->proposer = $proposer;
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, Proposer>

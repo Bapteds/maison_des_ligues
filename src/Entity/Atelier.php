@@ -6,8 +6,10 @@ use App\Repository\AtelierRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Table;
 
 #[ORM\Entity(repositoryClass: AtelierRepository::class)]
+#[Table(name: 'Atelier')]
 class Atelier
 {
     #[ORM\Id]
@@ -15,7 +17,7 @@ class Atelier
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, name: 'libelle') ]
     private ?string $libelle = null;
 
     #[ORM\Column]
@@ -25,7 +27,7 @@ class Atelier
     #[ORM\ManyToMany(targetEntity: Inscription::class, mappedBy: 'atelierInscrit')]
     private Collection $inscriptions;
 
-    #[ORM\ManyToMany(targetEntity: theme::class, inversedBy: 'ateliers')]
+    #[ORM\ManyToMany(targetEntity: Theme::class, inversedBy: 'ateliers')]
     private Collection $themes;
 
     #[ORM\OneToMany(mappedBy: 'atelier', targetEntity: Vacation::class)]
@@ -102,15 +104,13 @@ class Atelier
         return $this->libelle;
     }
 
-    /**
-     * @return Collection<int, theme>
-     */
-    public function getThemes(): Collection
+
+    public function getThemes()
     {
         return $this->themes;
     }
 
-    public function addTheme(theme $theme): static
+    public function addTheme(Theme $theme): static
     {
         if (!$this->themes->contains($theme)) {
             $this->themes->add($theme);
@@ -119,7 +119,7 @@ class Atelier
         return $this;
     }
 
-    public function removeTheme(theme $theme): static
+    public function removeTheme(Theme $theme): static
     {
         $this->themes->removeElement($theme);
 

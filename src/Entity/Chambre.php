@@ -18,7 +18,7 @@ class Chambre
     #[ORM\Column(length: 255)]
     private ?string $libelleCategorie = null;
 
-    #[ORM\OneToMany(mappedBy: 'chambre', targetEntity: nuite::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'chambre', targetEntity: Nuite::class, orphanRemoval: true)]
     private Collection $nuite;
 
     #[ORM\OneToMany(mappedBy: 'chambre', targetEntity: Proposer::class)]
@@ -58,7 +58,7 @@ class Chambre
         return $this->nuite;
     }
 
-    public function addNuite(nuite $nuite): static
+    public function addNuite(Nuite $nuite): static
     {
         if (!$this->nuite->contains($nuite)) {
             $this->nuite->add($nuite);
@@ -68,7 +68,7 @@ class Chambre
         return $this;
     }
 
-    public function removeNuite(nuite $nuite): static
+    public function removeNuite(Nuite $nuite): static
     {
         if ($this->nuite->removeElement($nuite)) {
             // set the owning side to null (unless already changed)
