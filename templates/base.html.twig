@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+        {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
+        {% block stylesheets %}
+            {{ encore_entry_link_tags('app') }}
+        {% endblock %}
+
+        {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
+        {% endblock %}
+    </head>
+    <body class=" flex  flex-col items-center bg-gray-100 h-[300vh]">
+        <header class="h-[6vh] w-[100%] ">
+            {% include 'partials/header.html.twig' %}
+        </header>
+        <div class="h-[94vh] w-[70%] flex items-center ">
+            {% block content %}{% endblock %}
+        </div>
+        <div class="h-[100vh] w-[70%] flex items-center bg-red-300" id="ateliers">
+            
+        </div>
+        <div class="h-[100vh] w-[70%] flex items-center bg-blue-300" id="hebergement">
+            
+        </div>
+    </body>
+</html>
