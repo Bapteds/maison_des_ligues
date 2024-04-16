@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Table;
 
 #[ORM\Entity(repositoryClass: AtelierRepository::class)]
-#[Table(name: 'Atelier')]
+#[Table(name: 'atelier')]
 class Atelier
 {
     #[ORM\Id]
@@ -20,7 +20,7 @@ class Atelier
     #[ORM\Column(length: 255, name: 'libelle') ]
     private ?string $libelle = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?int $nbPlaces = null;
 
 

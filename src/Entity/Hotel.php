@@ -21,7 +21,7 @@ class Hotel
     #[ORM\Column(length: 255)]
     private ?string $adresse = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $adresse2 = null;
 
     #[ORM\Column(length: 255)]
