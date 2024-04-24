@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Log in!
+{% endblock %}
+
+{% block content %}
+	<form method="post">
+		<div class="flex flex-col items-center justify-around h-[65vh] w-96 bg-gray-50 shadow-xl rounded-lg">
+			<div class="h-[20%] w-full flex-col flex items-center justify-center font-semibold uppercase text-2xl">
+				<h1 class="h3 mb-3 font-weight-normal w-[80%] h-10 flex items-center justify-center text-center rounded-md shadow-inner bg-gray-200">Maison des ligues</h1>
+				{% if error %}
+					<h1 class="text-red-500 h-[7%] w-[80%] text-center text-sm font-semibold normal-case">{{error}}</h1>
+				{% endif %}
+
+			</div>
+			<div class="h-[10%] w-[95%] shadow-inner rounded-md bg-gray-100 flex-col flex justify-center items-center space-y-3 ">
+				<h1 for="licence_code" class="w-[90%] text-center font-semibold">Demande de création de compte</h1>
+			</div>
+			<div class="h-[20%] w-[95%] shadow-inner rounded-md bg-gray-100 flex-col flex justify-center items-center space-y-3 ">
+				<label for="password" class="w-[90%] text-left font-semibold">Numéro de licence</label>
+				<input class="w-[90%] indent-2 rounded-md h-[30px]" type="text" name="licence_code" id="licence_code" placeholder="N° de licence" required autofocus>
+			</div>
+			<div class="h-[30%] w-[95%] shadow-inner rounded-md bg-gray-100 flex-col flex justify-center items-center space-y-3 ">
+				<label for="password" class="w-[90%] text-left font-semibold">Mot de passe</label>
+				<input class="w-[90%] indent-2 rounded-md h-[30px]" type="password" name="password" id="password" placeholder="Mot de passe" required autofocus>
+				<label for="confirmation" class="w-[90%] text-left font-semibold">Confirmer mot de pase</label>
+				<input class="w-[90%] indent-2 rounded-md h-[30px]" type="password" name="confirmation" id="confirmation" placeholder="Confirmation" required autofocus>
+			</div>
+			<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+			<div class="h-[6%] w-[80%] flex items-center justify-around">
+				<a href="/login" class="bg-orange-400 w-[40%] h-[90%] rounded-md hover:scale-105 duration-200 flex items-center justify-center hover:bg-orange-600 text-white font-semibold" type="submit">
+					Retour
+				</a>
+				<button class="bg-green-400 w-[40%] h-[90%] rounded-md hover:scale-105 duration-200 hover:bg-green-600 text-white font-semibold" type="submit">
+					Valider
+				</button>
+			</div>
+		</div>
+	</form>
+{% endblock %}

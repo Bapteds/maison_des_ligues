@@ -13,9 +13,13 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class AccueilController extends AbstractController
 {
+
+    
     #[Route('/', name: 'app_accueil')]
     public function index(ManagerRegistry $doctrine): Response
     {
+        //$this->denyAccessUnlessGranted('ROLE_USER');
+
 
         $hotels = $doctrine->getRepository(Hotel::class)->findAll();
         $ateliers = $doctrine->getRepository(Atelier::class)->findAll();

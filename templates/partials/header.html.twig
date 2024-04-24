@@ -7,23 +7,33 @@
 			</a>
 			<div class="hidden w-full md:block md:w-auto" id="navbar-default">
 				<ul class="font-semibold flex flex-col text-base p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-gray-100 ">
-					<li>
-						<a href="#" class="hover:scale-110 duration-200 block py-2 px-3 text-gray-900 rounded hover:text-gray-300  md:border-0  md:p-0 ">Home</a>
-					</li>
-					<li>
-						<a href="#" class="hover:scale-110 duration-200 block py-2 px-3 text-gray-900 rounded hover:text-gray-300  md:border-0  md:p-0 ">About</a>
-					</li>
-					<li>
-						<a href="#" class="hover:scale-110 duration-200 block py-2 px-3 text-gray-900 rounded hover:text-gray-300  md:border-0  md:p-0 ">Services</a>
-					</li>
-					<li>
-						<a href="#" class="hover:scale-110 duration-200 block py-2 px-3 text-gray-900 rounded hover:text-gray-300  md:border-0  md:p-0 ">Pricing</a>
-					</li>
-					<li>
-						<a href="#" class="hover:scale-110 duration-200 block py-2 px-3 text-gray-900 rounded hover:text-gray-300  md:border-0  md:p-0 ">Contact</a>
-					</li>
-				</ul>
+					{% if( app.user != null) %}
+						<li>
+							<a href="#" class="hover:scale-110 duration-200 block py-2 px-3 text-gray-900 rounded hover:text-gray-300  md:border-0  md:p-0 ">Home</a>
+						</li>
+						<li>
+							<a href="#" class="hover:scale-110 duration-200 block py-2 px-3 text-gray-900 rounded hover:text-gray-300  md:border-0  md:p-0 ">About</a>
+						</li>
+						<li>
+							<a href="#" class="hover:scale-110 duration-200 block py-2 px-3 text-gray-900 rounded hover:text-gray-300  md:border-0  md:p-0 ">Services</a>
+						</li>
+						<li>
+							<a href="#" class="hover:scale-110 duration-200 block py-2 px-3 text-gray-900 rounded hover:text-gray-300  md:border-0  md:p-0 ">Pricing</a>
+						</li>
+						<li>
+							<a href="#" class="hover:scale-110 duration-200 block py-2 px-3 text-gray-900 rounded hover:text-gray-300  md:border-0  md:p-0 ">Contact</a>
+						</li>
+						<li>
+							<a href="/logout" class="hover:scale-110 duration-200 block py-2 px-3 text-gray-900 rounded hover:text-gray-300  md:border-0  md:p-0 ">Se déconnecter</a>
+						</li>
+					{% else %}
+						<li>
+							<a href="/login" class="hover:scale-110 duration-200 block py-2 px-3 text-gray-900 rounded hover:text-gray-300  md:border-0  md:p-0 ">Se connecter</a>
+						</li>
+					{% endif %}
+
+					</ul>
+				</div>
 			</div>
-		</div>
-	</nav>
-</div>
+		</nav>
+	</div>
