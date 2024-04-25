@@ -3,73 +3,76 @@
 namespace App\Entity;
 
 use App\Repository\ProposerRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ProposerRepository::class)]
 class Proposer
 {
+    /**
+     * Id Proposer
+     */
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
+    /**
+     * Tarif nuitée Proposer
+     */
     #[ORM\Column]
-    private ?float $tarifNuite = null;
+    private ?int $tarifNuite = null;
 
-    #[ORM\ManyToOne(inversedBy: 'proposers')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?hotel $hotel = null;
+    /**
+     * Les hotels de Proposer
+     */
+    #[ORM\ManyToOne(inversedBy: 'propositions', targetEntity: Hotel::class)]
+    #[ORM\JoinColumn(referencedColumnName: 'id', name: 'hotel_id')]
+    private $hotels;
 
-    #[ORM\ManyToOne(inversedBy: 'proposers')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Chambre $chambre = null;
+    /**
+     * Les catégories chambre de Proposer
+     */
+    #[ORM\ManyToOne(inversedBy: 'propositions', targetEntity: CategorieChambre::class)]
+    #[ORM\JoinColumn(referencedColumnName: 'id', name: 'categorie_id')]
+    private $categorieChambre;
 
-
+    /**
+     * Retourne l'id de Proposer
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getTarifNuite(): ?float
+    /**
+     * Retourne le tarif nuitée de Proposer
+     */
+    public function getTarifNuite(): ?int
     {
         return $this->tarifNuite;
     }
 
-    public function setTarifNuite(float $tarifNuite): static
+    /**
+     * Définit le tarif nuitée de Proposer
+     */
+    public function setTarifNuite(int $tarifNuite): static
     {
         $this->tarifNuite = $tarifNuite;
 
         return $this;
     }
 
-    public function getHotel(): ?hotel
-    {
-        return $this->hotel;
+    /**
+     * Retourne les hotels de Proposer
+     */
+    public function getHotels() {
+        return $this->hotels;
     }
 
-    public function setHotel(?hotel $hotel): static
-    {
-        $this->hotel = $hotel;
-
-        return $this;
+    /**
+     * Retourne les catégories chambre de Proposer
+     */
+    public function getCategorieChambre() {
+        return $this->categorieChambre;
     }
-
-    public function getChambre(): ?Chambre
-    {
-        return $this->chambre;
-    }
-
-    public function setChambre(?Chambre $chambre): static
-    {
-        $this->chambre = $chambre;
-
-        return $this;
-    }
-
-
-
-
-
 }

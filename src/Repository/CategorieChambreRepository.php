@@ -2,27 +2,27 @@
 
 namespace App\Repository;
 
-use App\Entity\Chambre;
+use App\Entity\CategorieChambre;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Chambre>
+ * @extends ServiceEntityRepository<CategorieChambre>
  *
- * @method Chambre|null find($id, $lockMode = null, $lockVersion = null)
- * @method Chambre|null findOneBy(array $criteria, array $orderBy = null)
- * @method Chambre[]    findAll()
- * @method Chambre[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method CategorieChambre|null find($id, $lockMode = null, $lockVersion = null)
+ * @method CategorieChambre|null findOneBy(array $criteria, array $orderBy = null)
+ * @method CategorieChambre[]    findAll()
+ * @method CategorieChambre[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ChambreRepository extends ServiceEntityRepository
+class CategorieChambreRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Chambre::class);
+        parent::__construct($registry, CategorieChambre::class);
     }
 
 //    /**
-//     * @return Chambre[] Returns an array of Chambre objects
+//     * @return CategorieChambre[] Returns an array of CategorieChambre objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -36,7 +36,7 @@ class ChambreRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Chambre
+//    public function findOneBySomeField($value): ?CategorieChambre
 //    {
 //        return $this->createQueryBuilder('c')
 //            ->andWhere('c.exampleField = :val')

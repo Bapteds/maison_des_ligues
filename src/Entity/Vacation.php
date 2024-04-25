@@ -3,79 +3,91 @@
 namespace App\Entity;
 
 use App\Repository\VacationRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: VacationRepository::class)]
 class Vacation
 {
+    /**
+     * Id Vacation
+     */
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Assert\GreaterThanOrEqual('today')]
-    private ?\DateTimeInterface $dateHeureDebut = null;
+    /**
+     * Les ateliers de Vacation
+     */
+    #[ORM\ManyToOne(inversedBy: 'vacations', targetEntity: Atelier::class)]
+    private ?Atelier $ateliers = null;
+    
+    /**
+     * Date heure début Vacation
+     */
+    #[ORM\Column(length: 255)]
+    private ?string $dateHeureDebut = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Assert\GreaterThan(propertyPath: 'dateHeureDebut')]
-    private ?\DateTimeInterface $dateHeureFin = null;
+    /**
+     * Date heure fin Vacation
+     */
+    #[ORM\Column(length: 255)]
+    private ?string $dateHeureFin = null;
 
-    #[ORM\ManyToOne(inversedBy: 'vacations')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Atelier $atelier = null;
-
-
+    /**
+     * Créer une instance Vacation
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getDateHeureDebut(): ?\DateTimeInterface
+    /**
+     * Retourne la date en heure de début de Vacation
+     */
+    public function getDateHeureDebut(): ?string
     {
         return $this->dateHeureDebut;
     }
 
-    public function setDateHeureDebut(\DateTimeInterface $dateHeureDebut): self
+    /**
+     * Définit la date en heure de début de Vacation
+     */
+    public function setDateHeureDebut(string $dateHeureDebut): static
     {
         $this->dateHeureDebut = $dateHeureDebut;
 
         return $this;
     }
 
-    public function getDateHeureFin(): ?\DateTimeInterface
+    /**
+     * Retourne la date en heure de fin de Vacation
+     */
+    public function getDateHeureFin(): ?string
     {
         return $this->dateHeureFin;
     }
 
-    public function setDateHeureFin(\DateTimeInterface $dateHeureFin): self
+    /**
+     * Définit la date en heure de fin de Vacation
+     */
+    public function setDateHeureFin(string $dateHeureFin): static
     {
         $this->dateHeureFin = $dateHeureFin;
 
         return $this;
     }
 
-    public function __toString() {
-        $debut = $this->dateHeureDebut->format('d-m-Y H:i:s');
-        $fin = $this->dateHeureFin->format('d-m-Y H:i:s');
-        $result = 'Du ' . $debut . ' au ' . $fin;
-        return $result;
+    /**
+     * Retourne les ateliers
+     */
+    public function getAtelier(){
+        return $this->ateliers;
     }
 
-    public function getAtelier(): ?Atelier
-    {
-        return $this->atelier;
+    public function getPeriodeVacation(){
+        $periode = (substr($this->dateHeureDebut,5, -3)) .' -> '.(substr($this->dateHeureFin,5, -3));
+        return $periode;
     }
-
-    public function setAtelier(?Atelier $atelier): static
-    {
-        $this->atelier = $atelier;
-
-        return $this;
-    }
-
 }

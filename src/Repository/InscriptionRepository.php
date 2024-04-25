@@ -21,33 +21,6 @@ class InscriptionRepository extends ServiceEntityRepository
         parent::__construct($registry, Inscription::class);
     }
 
-    public function save(Inscription $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->persist($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
-
-    public function remove(Inscription $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->remove($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
-
-    public function getNbAtelier(int $id){
-        $conn = $this->getEntityManager()->getConnection();
-        $sql = "SELECT COUNT(*) as nbplaces FROM inscription_atelier
-        WHERE inscription_atelier.atelier_id = :id";
-        $statement = $conn->prepare($sql);
-        $result = $statement->executeQuery(['id' => $id]);
-        return $result->fetchAllAssociative();
-    }
-
 //    /**
 //     * @return Inscription[] Returns an array of Inscription objects
 //     */

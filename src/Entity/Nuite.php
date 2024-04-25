@@ -5,67 +5,65 @@ namespace App\Entity;
 use App\Repository\NuiteRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Chambre;
+
 #[ORM\Entity(repositoryClass: NuiteRepository::class)]
 class Nuite
 {
+    /**
+     * Id Nuite
+     */
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
+    /**
+     * Date nuitée Nuite
+     */
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $dateNuitee = null;
+    private ?\DateTimeInterface $datenuitee = null;
 
+    /**
+     * Catégorie chambre Nuite
+     */
     #[ORM\ManyToOne(inversedBy: 'nuites')]
-    #[ORM\JoinColumn(nullable: false)]
+    private ?CategorieChambre $categorie = null;
+
+    /**
+     * Hotel Nuite
+     */
+    #[ORM\ManyToOne(inversedBy: 'nuites')]
     private ?Hotel $hotel = null;
 
-    #[ORM\ManyToOne(inversedBy: 'nuite')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Chambre $chambre = null;
+    /**
+     * Inscription Nuite
+     */
+    #[ORM\ManyToOne(inversedBy: 'nuites')]
+    private ?Inscription $inscription = null;
 
-
+    /**
+     * Retourne l'id de Nuite
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getDateNuitee(): ?\DateTimeInterface
+    /**
+     * Retourne la date nuitée de Nuite
+     */
+    public function getDatenuitee(): ?\DateTimeInterface
     {
-        return $this->dateNuitee;
+        return $this->datenuitee;
     }
 
-    public function setDateNuitee(\DateTimeInterface $dateNuitee): static
+    /**
+     * Définit la date nuitée de Nuite
+     */
+    public function setDatenuitee(\DateTimeInterface $datenuitee): static
     {
-        $this->dateNuitee = $dateNuitee;
+        $this->datenuitee = $datenuitee;
 
         return $this;
     }
-
-    public function getHotel(): ?Hotel
-    {
-        return $this->hotel;
-    }
-
-    public function setHotel(?Hotel $hotel): static
-    {
-        $this->hotel = $hotel;
-
-        return $this;
-    }
-
-    public function getChambre(): ?Chambre
-    {
-        return $this->chambre;
-    }
-
-    public function setChambre(?Chambre $chambre): static
-    {
-        $this->chambre = $chambre;
-
-        return $this;
-    }
-
-
 }

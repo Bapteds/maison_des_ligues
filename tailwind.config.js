@@ -6,7 +6,11 @@ module.exports = {
     "./templates/**/*.html.twig",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        'logomdl': '#FEC816',
+      }
+    },
   },
   plugins: [],
 }

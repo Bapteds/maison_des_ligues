@@ -11,82 +11,81 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: RestaurationRepository::class)]
 class Restauration
 {
+    /**
+     * Id Restauration
+     */
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    /**
+     * Date restauration Restauration
+     */
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $dateRestauration = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $libelle = null;
+    /**
+     * Type repas Restauration
+     */
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $typeRepas = null;
 
-    #[ORM\ManyToMany(targetEntity: Inscription::class, mappedBy: 'restaurer')]
+    /**
+     * Les inscriptions de Restauration
+     */
+    #[ORM\ManyToMany(mappedBy: 'restaurations', targetEntity: Inscription::class)]
     private Collection $inscriptions;
 
+    /**
+     * Créer une instance Restauration
+     */
     public function __construct()
     {
         $this->inscriptions = new ArrayCollection();
     }
 
+    /**
+     * Retourne l'id de Restauration
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * Retourne la date restauration de Restauration
+     */
     public function getDateRestauration(): ?\DateTimeInterface
     {
         return $this->dateRestauration;
     }
 
-    public function setDateRestauration(\DateTimeInterface $dateRestauration): self
+    /**
+     * Définit la date restauration de Restauration
+     */
+    public function setDateRestauration(?\DateTimeInterface $dateRestauration): static
     {
         $this->dateRestauration = $dateRestauration;
 
         return $this;
     }
 
-    public function getLibelle(): ?string
+    /**
+     * Retourne le type repas de Restauration
+     */
+    public function getTypeRepas(): ?string
     {
-        return $this->libelle;
-    }
-
-    public function setLibelle(string $libelle): self
-    {
-        $this->libelle = $libelle;
-
-        return $this;
+        return $this->typeRepas;
     }
 
     /**
-     * @return Collection<int, Inscription>
+     * Définit le type repas de Restauration
      */
-    public function getInscriptions(): Collection
+    public function setTypeRepas(?string $typeRepas): static
     {
-        return $this->inscriptions;
-    }
-
-    public function addInscription(Inscription $inscription): self
-    {
-        if (!$this->inscriptions->contains($inscription)) {
-            $this->inscriptions->add($inscription);
-            $inscription->addRestaurer($this);
-        }
+        $this->typeRepas = $typeRepas;
 
         return $this;
-    }
-
-    public function removeInscription(Inscription $inscription): self
-    {
-        if ($this->inscriptions->removeElement($inscription)) {
-            $inscription->removeRestaurer($this);
-        }
-
-        return $this;
-    }
-    
-    public function __toString() {
-        return $this->libelle;
     }
 }

@@ -14,30 +14,30 @@ class User implements UserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(name:'id')]
+    #[ORM\Column(name: 'id')]
     private ?int $id = null;
 
-    #[ORM\Column(name:'email', length: 180)]
+    #[ORM\Column(name: 'email', length: 180)]
     private ?string $email = null;
 
-    #[ORM\Column(name:'roles')]
+    #[ORM\Column(name: 'roles')]
     private array $roles;
 
     /**
      * @var string The hashed password
      */
-    #[ORM\Column(name:'password')]
+    #[ORM\Column(name: 'password')]
     private ?string $password = null;
 
-    #[ORM\Column(name:'numlicence', length: 255, unique: true)]
+    #[ORM\Column(name: 'numlicence', length: 255, unique: true)]
     private ?string $numlicence = null;
 
-    #[ORM\Column(name:'isVerified', type: 'boolean')]
+    #[ORM\Column(name: 'isVerified', type: 'boolean')]
     private $isVerified = false;
-
+    /** 
     #[ORM\OneToOne(targetEntity: Inscription::class, cascade: ['persist', 'remove'], mappedBy: "licencie")]
     private ?Inscription $inscriptions = null;
-
+     */
     public function getId(): ?int
     {
         return $this->id;
@@ -150,7 +150,7 @@ class User implements UserInterface
     {
         return $this->email;
     }
-
+    /**
     public function getInscription(): ?Inscription
     {
         return $this->inscriptions;
@@ -161,5 +161,5 @@ class User implements UserInterface
         $this->inscriptions = $inscriptions;
 
         return $this;
-    }
+    } */
 }

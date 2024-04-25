@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Atelier;
 use App\Entity\Hotel;
+use App\Entity\Theme;
 use App\Entity\Vacation;
 use App\Repository\HotelRepository;
 use Doctrine\Persistence\ManagerRegistry;

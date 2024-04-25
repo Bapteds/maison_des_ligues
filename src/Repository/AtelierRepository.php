@@ -21,33 +21,6 @@ class AtelierRepository extends ServiceEntityRepository
         parent::__construct($registry, Atelier::class);
     }
 
-    public function save(Atelier $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->persist($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
-
-    public function remove(Atelier $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->remove($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
-    
-//    public function findAteliers(ManagerRegistry $doctrine): array
-//    {
-//        $manager = $doctrine->getManager();
-//        $sql= "select a.libelle,a.nbplaces from atelier a";
-//        $result = $manager->getConnexion()->prepare($sql);
-//        $result->fetchAll();
-//        return $result;
-//    }
-
 //    /**
 //     * @return Atelier[] Returns an array of Atelier objects
 //     */

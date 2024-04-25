@@ -21,24 +21,6 @@ class VacationRepository extends ServiceEntityRepository
         parent::__construct($registry, Vacation::class);
     }
 
-    public function save(Vacation $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->persist($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
-
-    public function remove(Vacation $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->remove($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
-
 //    /**
 //     * @return Vacation[] Returns an array of Vacation objects
 //     */

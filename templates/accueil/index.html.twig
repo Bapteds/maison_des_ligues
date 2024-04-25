@@ -4,8 +4,123 @@
 {% endblock %}
 
 {% block content %}
+	<div class="h-[100%] items-center justify-between flex flex-col w-[100%]">
+		<div class="flex items-center justify-center w-[100%] h-[93vh] bg-gradient-to-b from-gray-100 to-gray-300">
+			<div class="flex justify-center pt-1  items-end h-[100%] w-[60%]  ">
+				<div class="w-[100%] h-[99.5%] flex flex-col items-center  pt-1 bg-gray-100 rounded-t-md ">
+					<div class="w-[60%] flex items-center justify-center h-[10%]">
+						<h1 class="font-semibold text-4xl italic text-[#FEC816]">Bienvenue sur Maison des Ligues !</h1>
+					</div>
+					<div class="w-[95%] h-[90%] flex flex-row justify-around items-center  ">
+						<div class="flex flex-col h-[90%] w-[45%] justify-around items-center">
+							<div class="bg-gray-100  border-4 items-center  border-gray-200  rounded-md flex flex-col h-[45%] w-[100%]">
+								<div class="w-[90%] h-[15%] flex items-center ">
+									<h1 class="indent-1 text-xl  font-semibold italic">🤺 - Qui sommes nous ?
+									</h1>
+								</div>
+								<div class="w-[90%] h-[70%] pt-4 text-justify flex items-center justify-center">
+									<p class="w-[95%] md:text-base ">• Un site web permettant de regrouper tous les services necessaires pour l'inscription d'un licencier à un congrés d'écrime.<br><br>
+										• Le site permet d'obtenir des informations sur les différents Ateliers, Thêmes et Vacations.<br><br>
+										• De plus si vous êtes détenteur d'une licence, vous avez aussi la possibilité de vous inscrire à des formules, contenant des Hotels et des repas.
+									</p>
+								</div>
+							</div>
+							<div class="bg-gray-100  border-4 items-center  border-gray-200  rounded-md flex flex-col h-[45%] w-[100%]">
+								<div class="w-[90%] h-[15%] flex items-center ">
+									<h1 class="indent-1 text-xl  font-semibold italic">📚 - Quelques informations..
+									</h1>
+								</div>
+								<div class="w-[90%] h-[70%] pt-4 text-justify flex items-center justify-center">
+									<p class="w-[95%] md:text-base ">• Prochain congrès:
+										<span class="italic underline decoration-[#FEC816] font-semibold text-[#FEC816]">du 7 au 8 Septembre 2024</span>.<br><br>
+										• Différentes formules d'hébergement disponible dans
+										<span class="italic underline decoration-[#FEC816] text-[#FEC816] font-semibold">deux hôtels distincts</span>.<br><br>
+										• Plus de
+										<span class="italic underline font-semibold decoration-[#FEC816] text-[#FEC816]">5</span>
+										ateliers, disponible avec différents thêmes et vacations;
+									</p>
+								</div>
+								<div class="flex flex-row justify-around w-[90%]">
+									<a href="#atelier" class="bg-[#1A8FE3] w-36 flex items-center rounded-md hover:bg-blue-700 duration-200 justify-center h-8 text-white font-semibold">Ateliers</a>
+									<a href="#hotel" class="bg-[#1A8FE3] w-36 flex items-center rounded-md hover:bg-blue-700 duration-200 justify-center h-8 text-white font-semibold">Hôtels</a>
+								</div>
+							</div>
+						</div>
+						<div class="bg-gray-200 h-[90%] w-[47%] ">
+							<img src={{ asset('build/images/escrime_acc.jpg') }} class="rounded-lg w-[100%] h-[100%]">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="h-[100vh] w-[100%] flex items-center justify-center bg-gradient-to-b from-gray-300 to-gray-100" id="atelier">
+			<div class="flex justify-center pb-1 items-end h-[100%] w-[60%]  ">
+				<div class="w-[100%] h-[99.5%] flex flex-col items-center   bg-gray-100 rounded-b-md ">
+					<div class="w-[60%] flex items-center justify-center h-[10%]">
+						<h1 class="font-semibold text-4xl italic text-[#FEC816]">Les ateliers :</h1>
+					</div>
+					<div class="w-[100%] h-[90%] flex flex-row justify-around items-center  ">
+						<div class="flex  h-[90%] w-[90%] flex-col justify-around items-center">
+							<h1 class="h-[10%]">• Actuellement on en compte
+								{{ateliers|length}}
+								différents.</h1>
+							<div class="bg-gray-100 h-[75vh] border-4 items-center justify-start space-y-3 border-gray-200 py-3 rounded-md flex flex-col w-[100%] overflow-y-scroll">
+								{% for atelier in ateliers  %}
+									<div class="w-[100%] flex flex-row  items-center justify-around">
+										<div class="flex flex-col justify-center space-y-2 items-center w-[65%] border-2 rounded-md border-[#FEC816]">
+											<div class="w-[100%] text-lg">
+												<h1 class="indent-2 pt-1 font-semibold uppercase">•
+													{{atelier.getLibelle()}}</h1>
+											</div>
+											{% for theme in atelier.getThemes %}
+												<div class="w-[90%] pb-1">
+													<h1>-
+														{{theme.getLibelle()}}</h1>
+												</div>
+											{% endfor %}
+										</div>
 
+										<div class="flex flex-col justify-around h-full items-center w-[30%] border-2 rounded-md border-[#FEC816]">
+											<h1 class="w-[90%] text-left font-semibold pt-2">• Vacations </h1>
+											{% for vacation in atelier.getVacations() %}
+												<h1 class="text-sm w-[90%]">{{vacation.getPeriodeVacation()}}</h1>
+											{% endfor %}
+										</div>
+
+									</div>
+								{% endfor %}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="h-[100vh] w-[100%] pt-1 flex items-center justify-center bg-gradient-to-b from-gray-100 to-gray-300" id="hotel">
+			<div class="flex justify-center  items-end h-[100%] w-[60%]  ">
+				<div class="w-[100%] h-[99.5%] flex flex-col items-center   bg-gray-100 rounded-b-md ">
+					<div class="w-[60%] flex items-center justify-center h-[10%]">
+						<h1 class="font-semibold text-4xl italic text-[#FEC816]">Les formules d'hébergements :</h1>
+					</div>
+					<div class="w-[95%] h-[90%] flex flex-row justify-around items-center  ">
+						<div class="flex  h-[90%] w-[90%] flex-col justify-around items-center">
+							<h1 class="h-[10%]">• Actuellement on en compte
+								{{hotels|length}}
+								différents.</h1>
+							<div class="bg-gray-100 h-[75vh] border-4 items-center justify-start space-y-3 border-gray-200 py-3 rounded-md flex flex-col w-[100%] overflow-y-scroll">
+								{% for hotel in hotels  %}
+									<div class="flex flex-col justify-center space-y-2 items-center w-[95%] border-2 rounded-md border-[#FEC816]">
+										<div class="w-[100%] text-lg">
+											<h1 class="indent-2 pt-1 font-semibold uppercase">•
+												{{hotel.getPnom()}}</h1>
+										</div>
+
+									</div>
+								{% endfor %}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 {% endblock %}
-
-
-
