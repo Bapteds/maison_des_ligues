@@ -12,13 +12,17 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Serializer;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+
 
 class SecurityController extends AbstractController
 {
 
 
-    public function __construct() {
+    public function __construct()
+    {
     }
 
     #[Route(path: '/login', name: 'app_login')]
@@ -78,20 +82,38 @@ class SecurityController extends AbstractController
      */
     private function existLicence(string $numlicence, EntityManager $manager, HttpClientInterface $client): array
     {
-        $this->licenceAPI($numlicence, $client);
-        return [];
+       return $this->licenceAPI($numlicence, $client);
     }
 
-    private function licenceAPI(string $numlicence, HttpClientInterface $client)
+
+    /**
+     * Fonction qui fait appel à l'API, pour récupérer une Licence
+     *
+     * @param string $numlicence
+     * @param HttpClientInterface $client
+     * @return array
+     */
+    private function licenceAPI(string $numlicence, HttpClientInterface $client): array
     {
         $response = $client->request(
-            'GET', 'http://localhost:8888/api/licencies?page=1&numlicence='.$numlicence
+            'GET',
+            'http://localhost:8888/api/licencies?page=1&numlicence=' . $numlicence
         );
 
-        dd($response->getContent());
+        $json = json_decode($response->getContent(), true);
+        if(!isset($json['hydra:member'][0])){
+            return [];
+        }
+        return $json['hydra:member'][0];
     }
 
-
+    /**
+     * A utiliser quand l'API ne fonctionne pas.
+     *
+     * @param string $numlicence
+     * @param EntityManager $manager
+     * @return void
+     */
     private function licenceBDD(string $numlicence, EntityManager $manager)
     {
         $req = 'SELECT * FROM LICENCIE WHERE numlicence =:numlicence';
@@ -109,10 +131,10 @@ class SecurityController extends AbstractController
     private function createUser(array $licencie, string $password, EntityManager $manager)
     {
         $user = new User();
-        $user->setEmail($licencie[0]['MAIL']);
+        $user->setEmail($licencie['mail']);
         $user->setRoles('ROLE_INSCRIT');
         $user->setPassword($password);
-        $user->setNumlicence($licencie[0]['numlicence']);
+        $user->setNumlicence($licencie['numlicence']);
         $user->setIsVerified(false);
         $manager->persist($user);
         $manager->flush();

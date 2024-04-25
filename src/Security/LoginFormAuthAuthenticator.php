@@ -41,18 +41,18 @@ class LoginFormAuthAuthenticator extends AbstractLoginFormAuthenticator
     {
         $licence = $request->request->get('licence_code');
         $password = $request->request->get('password');
+
         //$request->getSession()->set(Security::LAST_USERNAME, $email);
         return new Passport(
             new UserBadge($licence,function($userId){
                 $user = $this->userRepo->findOneBy(['numlicence'=>$userId]);
                 return $user;
-
             }),
             new CustomCredentials(function($credential,User $user) {
                 return $credential == $user->getPassword();
             }, $password)
+            
         );
-
         new CsrfTokenBadge('authenticate', $request->request->get('_csrf_token'));
     }
 

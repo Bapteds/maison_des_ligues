@@ -21,7 +21,7 @@ class User implements UserInterface
     private ?string $email = null;
 
     #[ORM\Column(name:'roles')]
-    private string $roles;
+    private array $roles;
 
     /**
      * @var string The hashed password
@@ -76,17 +76,14 @@ class User implements UserInterface
     /**
      * @see UserInterface
      */
-    public function getRoles(): string
+    public function getRoles(): array
     {
-        //$roles = $this->roles;
-        $roles = 'ROLE_INSCRIT';
-        return $roles;
+        return (array) $this->roles;
     }
 
     public function setRoles(string $roles): self
     {
-        $this->roles = $roles;
-
+        $this->roles[] = $roles;
         return $this;
     }
 
