@@ -37,6 +37,7 @@ class LoginFormAuthAuthenticator extends AbstractLoginFormAuthenticator
         $this->userRepo = $userRepo;
     }
 
+    
     public function authenticate(Request $request): Passport
     {
         $licence = $request->request->get('licence_code');

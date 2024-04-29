@@ -34,6 +34,9 @@ class User implements UserInterface
 
     #[ORM\Column(name: 'isVerified', type: 'boolean')]
     private $isVerified = false;
+
+    #[ORM\Column(length: 16, nullable: true)]
+    private ?string $valid_token = null;
     /** 
     #[ORM\OneToOne(targetEntity: Inscription::class, cascade: ['persist', 'remove'], mappedBy: "licencie")]
     private ?Inscription $inscriptions = null;
@@ -162,4 +165,16 @@ class User implements UserInterface
 
         return $this;
     } */
+
+    public function getValidToken(): ?string
+    {
+        return $this->valid_token;
+    }
+
+    public function setValidToken(?string $valid_token): static
+    {
+        $this->valid_token = $valid_token;
+
+        return $this;
+    }
 }

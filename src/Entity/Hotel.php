@@ -78,6 +78,21 @@ class Hotel {
     }
 
     /**
+     * Retourne les nuits
+     */
+    public function getNuitees(){
+        return $this->nuites;
+    }
+
+    /**
+     * Retourne les propostions
+     */
+    public function getPropositions(){
+        return $this->propositions;
+    }
+
+
+    /**
      * Retourne le nom de Hotel
      */
     public function getPnom(): ?string {

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
+use App\Services\Mailer;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -11,18 +12,22 @@ use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-
 
 class SecurityController extends AbstractController
 {
 
+    private $mailer;
 
-    public function __construct()
+    public function __construct(Mailer $mailer)
     {
+        $this->mailer = $mailer;
     }
 
     #[Route(path: '/login', name: 'app_login')]
@@ -33,7 +38,11 @@ class SecurityController extends AbstractController
         // }
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
-        if (isset($error) && $error->getCode() == 0) {
+        if($error instanceof CustomUserMessageAuthenticationException)
+        {
+            $error = $error->getMessage();
+        }
+        elseif (isset($error) && $error->getCode() == 0) {
             $error = 'Mot de passe, ou licence incorrect.';
         }
         // last username entered by the user
@@ -55,8 +64,10 @@ class SecurityController extends AbstractController
                     if (!$licencie) {
                         return $this->render('admin/auth/register.html.twig', ['error' => 'La licence n\'éxiste pas']);
                     } else {
-                        $this->createUser($licencie, $password, $manager);
-                        // Envoyer mail à l'user;
+                        $token = bin2hex(random_bytes(16));
+                        $link = $this->generateUrl('app_route_confirm', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL);
+                        $this->createUser($licencie, $password, $manager, $token);
+                        $this->mailer->sendEmail('maisondesligues@gouv.fr', $licencie['mail'], 'Validation de compte', $link);
                     }
                     return $this->render('admin/auth/register.html.twig', ['error' => 'Demande faite, vérifiez vos mails']);
                 }
@@ -67,6 +78,19 @@ class SecurityController extends AbstractController
             return $this->render('admin/auth/register.html.twig', ['error' => null]);
         }
     }
+
+    #[Route(path: '/confirm', name: 'app_route_confirm')]
+    public function confirmAccount(Request $request, UserRepository $repo)
+    {
+        $token = $request->get('token');
+        $isValid = $repo->verifyUser($token);
+        if ($isValid) {
+            return $this->render('admin/auth/login.html.twig', ['error' => 'Compte validée, vous pouvez vous connecter.']);
+        }
+        return $this->render('admin/auth/register.html.twig', ['error' => 'Une erreur est survenue, refaite une demande.']);
+    }
+
+
 
     private function getUserByLicence($numlicence, UserRepository $userRepo)
     {
@@ -82,7 +106,8 @@ class SecurityController extends AbstractController
      */
     private function existLicence(string $numlicence, EntityManager $manager, HttpClientInterface $client): array
     {
-       return $this->licenceAPI($numlicence, $client);
+        //return $this->licenceBDD($numlicence, $manager);
+        return $this->licenceAPI($numlicence, $client);
     }
 
 
@@ -100,7 +125,7 @@ class SecurityController extends AbstractController
             'http://localhost:8888/api/licencies?page=1&numlicence=' . $numlicence
         );
         $json = json_decode($response->getContent(), true);
-        if(!isset($json['hydra:member'][0])){
+        if (!isset($json['hydra:member'][0])) {
             return [];
         }
         return $json['hydra:member'][0];
@@ -127,7 +152,7 @@ class SecurityController extends AbstractController
      * @param array $licencie
      * @return void
      */
-    private function createUser(array $licencie, string $password, EntityManager $manager)
+    private function createUser(array $licencie, string $password, EntityManager $manager, $token)
     {
         $user = new User();
         $user->setEmail($licencie['mail']);
@@ -135,6 +160,7 @@ class SecurityController extends AbstractController
         $user->setPassword($password);
         $user->setNumlicence($licencie['numlicence']);
         $user->setIsVerified(false);
+        $user->setValidToken($token);
         $manager->persist($user);
         $manager->flush();
     }
