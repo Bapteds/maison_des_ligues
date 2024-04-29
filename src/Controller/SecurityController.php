@@ -99,7 +99,6 @@ class SecurityController extends AbstractController
             'GET',
             'http://localhost:8888/api/licencies?page=1&numlicence=' . $numlicence
         );
-
         $json = json_decode($response->getContent(), true);
         if(!isset($json['hydra:member'][0])){
             return [];

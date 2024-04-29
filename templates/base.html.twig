@@ -15,13 +15,13 @@
 			{{ encore_entry_script_tags('app') }}
 		{% endblock %}
 	</head>
-	<body class=" flex flex-col items-center h-[300vh]">
+	<body class=" flex flex-col items-center">
 
 		<header class="h-[7vh] w-[100%] ">
 			{% include 'partials/header.html.twig' %}
 		</header>
-			<div class="h-[293vh] w-[100%] flex items-center justify-center "> {% block content %}{% endblock %}
-				</div>
+		<div class=" w-[100%] flex items-center justify-center "> {% block content %}{% endblock %}
+			</div>
 
 		</body>
 	</html>
