@@ -105,7 +105,7 @@
 						<div class="flex  h-[90%] w-[90%] flex-col justify-around items-center">
 							<h1 class="h-[10%]">• Actuellement on en compte
 								{{hotels|length}}
-								différents.</h1>
+								différentes.</h1>
 							<div class="bg-gray-100 h-[75vh] border-4 items-center justify-start space-y-3 border-gray-200 py-3 rounded-md flex flex-col w-[100%] overflow-y-scroll">
 								{% for hotel in hotels  %}
 									<div class="flex flex-col justify-center space-y-2 items-center w-[95%] border-2 rounded-md border-[#FEC816]">
@@ -113,7 +113,14 @@
 											<h1 class="indent-2 pt-1 font-semibold uppercase">•
 												{{hotel.getPnom()}}</h1>
 										</div>
-
+										<div class="w-[90%]">
+										<h1>{{hotel.getAdresse1()}} - {{hotel.getCp()}} | {{hotel.getVille()}}</h1>
+										</div>
+										<div class="w-[90%] flex flex-col ">
+										<h1 class="font-semibold">Contacts:</h1>
+										<h1 class="">• {{hotel.getTel()}}</h1>
+										<h1 class="">• {{hotel.getMail()}}</h1>
+										</div>
 									</div>
 								{% endfor %}
 							</div>

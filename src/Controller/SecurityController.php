@@ -23,10 +23,13 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 class SecurityController extends AbstractController
 {
 
+    private $api_url;
+
     private $mailer;
 
     public function __construct(Mailer $mailer)
     {
+        $this->api_url = $_ENV['API_URL'];
         $this->mailer = $mailer;
     }
 
@@ -38,11 +41,9 @@ class SecurityController extends AbstractController
         // }
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
-        if($error instanceof CustomUserMessageAuthenticationException)
-        {
+        if ($error instanceof CustomUserMessageAuthenticationException) {
             $error = $error->getMessage();
-        }
-        elseif (isset($error) && $error->getCode() == 0) {
+        } elseif (isset($error) && $error->getCode() == 0) {
             $error = 'Mot de passe, ou licence incorrect.';
         }
         // last username entered by the user
@@ -66,6 +67,7 @@ class SecurityController extends AbstractController
                     } else {
                         $token = bin2hex(random_bytes(16));
                         $link = $this->generateUrl('app_route_confirm', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL);
+                        $password = password_hash($password,PASSWORD_DEFAULT);
                         $this->createUser($licencie, $password, $manager, $token);
                         $this->mailer->sendEmail('maisondesligues@gouv.fr', $licencie['mail'], 'Validation de compte', $link);
                     }
@@ -90,9 +92,49 @@ class SecurityController extends AbstractController
         return $this->render('admin/auth/register.html.twig', ['error' => 'Une erreur est survenue, refaite une demande.']);
     }
 
+    #[Route(path: '/forgotpwd', name: 'app_forgot')]
+    public function forgotPassword(Request $request, UserRepository $repo, EntityManagerInterface $manager)
+    {
+        if ($request->isMethod('POST')) {
+            $numlicence = $request->get('licence_code');
+            $user = $this->getUserByLicence($numlicence,$repo);
+            if($user){
+                if(!$user->isVerified()){
+                    return $this->render('admin/auth/pwd.html.twig',['error' => 'Veuillez vérifier votre compte avant de réinitialiser votre mot de passe.']);
+                }elseif($user->isVerified()){
+                    $token = bin2hex(random_bytes(16));
+                    $link = $this->generateUrl('app_route_reset', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL);
+                    $user->setValidToken($token);
+                    $repo->save($user,true);
+                    $this->mailer->sendEmail('maisondesligues@gouv.fr', $user->getEmail(), 'Changement de mot de passe', $link);
+                }
+            }
+            return $this->render('admin/auth/pwd.html.twig',['error' => 'Si votre licence existe, vous recevrez un mail.']);
+        }
+    return $this->render('admin/auth/pwd.html.twig',['error' => null]);
+    }
 
+    #[Route(path: '/resetpwd', name: 'app_route_reset')]
+    public function resetpwd(Request $request, UserRepository $repo){
+        $token = $request->get('token');
+        if($request->isMethod('POST')){
+            $password = $request->request->get('password');
+            if($password == $request->request->get('confirmation')){ 
+                $password = password_hash($password,PASSWORD_DEFAULT);
+                $repo->updatePassword($token,$password);
+            }
+            else{
+                return $this->render('admin/auth/changepwd.html.twig',['error' => 'Les mots de passe ne correspondent pas.']);
+            }
+        }
+        elseif(!$repo->isValidToken($token)){
+            return $this->render('admin/auth/changepwd.html.twig',['error' => null]);
+        }
 
-    private function getUserByLicence($numlicence, UserRepository $userRepo)
+        return $this->redirectToRoute('app_login');
+    }
+
+    private function getUserByLicence($numlicence, UserRepository $userRepo) : User
     {
         $user = $userRepo->findOneBy(['numlicence' => $numlicence]);
         return $user;
@@ -122,7 +164,7 @@ class SecurityController extends AbstractController
     {
         $response = $client->request(
             'GET',
-            'http://localhost:8888/api/licencies?page=1&numlicence=' . $numlicence
+            $this->api_url . '/api/licencies?page=1&numlicence=' . $numlicence
         );
         $json = json_decode($response->getContent(), true);
         if (!isset($json['hydra:member'][0])) {

@@ -21,8 +21,7 @@ class AccueilController extends AbstractController
     public function index(ManagerRegistry $doctrine, Mailer $mailer): Response
     {
         //$this->denyAccessUnlessGranted('ROLE_USER');
-
-        $hotels = $doctrine->getRepository(Hotel::class)->find(1);
+        $hotels = $doctrine->getRepository(Hotel::class)->findAll();
         $ateliers = $doctrine->getRepository(Atelier::class)->findAll();
 
 

@@ -57,6 +57,32 @@ class UserRepository extends ServiceEntityRepository
         }
     }
 
+    public function isValidToken(string $token){
+        $user = $this->createQueryBuilder('user')
+            ->andWhere('user.valid_token = :val')
+            ->setParameter('val', $token)
+            ->getQuery()
+            ->getOneOrNullResult();
+        return $user == null;
+    }
+
+
+    public function updatePassword(string $token, string $password){
+        $user = $this->createQueryBuilder('user')
+            ->andWhere('user.valid_token = :val')
+            ->setParameter('val', $token)
+            ->getQuery()
+            ->getOneOrNullResult();
+        if($user){
+            $user->setValidToken(null);
+            $user->setPassword($password);
+            $this->save($user,true);
+            return true;
+        }else{
+            return false;
+        }
+    }
+
 
     //    /**
     //     * @return User[] Returns an array of User objects

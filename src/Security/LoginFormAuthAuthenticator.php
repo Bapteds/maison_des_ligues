@@ -50,7 +50,7 @@ class LoginFormAuthAuthenticator extends AbstractLoginFormAuthenticator
                 return $user;
             }),
             new CustomCredentials(function($credential,User $user) {
-                return $credential == $user->getPassword();
+                return password_verify($credential,$user->getPassword());
             }, $password)
             
         );
