@@ -134,7 +134,7 @@ class SecurityController extends AbstractController
         return $this->redirectToRoute('app_login');
     }
 
-    private function getUserByLicence($numlicence, UserRepository $userRepo) : User
+    private function getUserByLicence($numlicence, UserRepository $userRepo) 
     {
         $user = $userRepo->findOneBy(['numlicence' => $numlicence]);
         return $user;

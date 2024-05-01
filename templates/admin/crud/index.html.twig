@@ -1,11 +1,31 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello AdminController!{% endblock %}
+{% block title %}Page de gestion
+{% endblock %}
 
 {% block content %}
-<div>
-Page d'édition
+	<div class="h-[93vh] w-[60%] flex items-center flex-col bg-red-200">
+		<div class="bg-green-200 h-10 w-[90%] flex items-center justify-center">
+			<h1 class="font-semibold">Zone d'édition des éléments</h1>
+		</div>
+		<fieldset class="w-[100%]">
+
+			<div class="bg-blue-200 h-24 w-[100%] flex justify-around">
+				<div class="flex flex-col items-center justify-center">
+					<label for="atelier">Atelier</label>
+					<input type="radio" name="item" value="1">
+				</div>
+				<div class="flex flex-col items-center justify-center">
+					<label for="atelier">Thèmes</label>
+					<input type="radio" name="item" value="2">
+				</div>
+				<div class="flex flex-col items-center justify-center">
+					<label for="atelier">Vacation</label>
+					<input type="radio" name="item" value="3">
+				</div>
+			</div>
+		</fieldset>
 
 
-</div>
+	</div>
 {% endblock %}
