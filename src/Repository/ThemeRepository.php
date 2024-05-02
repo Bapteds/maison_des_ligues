@@ -2,8 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\Atelier;
 use App\Entity\Theme;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -16,9 +18,21 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ThemeRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+
+    private $manager;
+
+    public function __construct(ManagerRegistry $registry,  EntityManagerInterface $manager)
     {
+        $this->manager = $manager;
         parent::__construct($registry, Theme::class);
+    }
+
+    public function save(string $libelle, Atelier $atelier){
+        $theme = new Theme();
+        $theme->setLibelle($libelle);
+        $theme->setAtelier($atelier);
+        $this->manager->persist($theme);
+        $this->manager->flush();
     }
 
 //    /**

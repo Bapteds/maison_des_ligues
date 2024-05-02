@@ -117,4 +117,25 @@ class Atelier
     {
         return $this->vacations;
     }
+
+    /**
+     * Ajoute l'atelier a la vacation
+     */
+    public function setVacation(Vacation $vacation): self
+    {
+        if (!$this->vacations->contains($vacation)) {
+            $this->vacations[] = $vacation;
+            $vacation->setAtelier($this);
+        }
+        return $this;
+    }
+
+    public function setTheme(Theme $theme): self
+    {
+        if (!$this->themes->contains($theme)) {
+            $this->themes[] = $theme;
+            $theme->setAtelier($this);
+        }
+        return $this;
+    }
 }

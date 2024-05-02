@@ -67,4 +67,13 @@ class Theme
     public function getAtelier(){
         return $this->ateliers;
     }
+
+
+    public function setAtelier(Atelier $atelier): self {
+        if (!$this->ateliers->contains($atelier)) {
+            $this->ateliers[] = $atelier;
+            $atelier->setTheme($this);
+        }
+        return $this;
+    }
 }
