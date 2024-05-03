@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Log in!
+{% endblock %}
+
+{% block content %}
+	<form method="post">
+		<div class="flex flex-col items-center justify-around h-[50vh] w-96 bg-gray-50 shadow-xl rounded-lg">
+			<div class="h-[20%] w-full flex-col flex items-center justify-center font-semibold uppercase text-2xl">
+				<h1 class="h3 mb-3 font-weight-normal w-[80%] h-10 flex items-center justify-center text-center rounded-md shadow-inner bg-gray-200">Annuler demande</h1>
+				{% if error %}
+					<h1 class="text-red-500 h-[7%] w-[80%] text-center text-sm font-semibold normal-case">{{error}}</h1>
+				{% endif %}
+
+			</div>
+			<div class="h-[20%] w-[95%] shadow-inner rounded-md bg-gray-100 flex-col flex justify-center items-center space-y-3 ">
+				<label for="licence_code" class="w-[90%] text-left font-semibold">N° Licence</label>
+				<input class="w-[90%] indent-2 rounded-md h-[40%]" type="number" name="licence_code" id="licence_code" placeholder="Numéro de licence" required autofocus>
+			</div>
+			<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+			<div class="h-[10%] w-[80%] flex items-center justify-around">
+				<button class="bg-green-400 w-[40%] h-[90%] rounded-md hover:scale-105 duration-200 hover:bg-green-600 text-white font-semibold" type="submit">
+					Se connecter
+				</button>
+			</div>
+		</div>
+	</form>
+{% endblock %}

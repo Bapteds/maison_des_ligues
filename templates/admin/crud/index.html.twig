@@ -1,0 +1,117 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Page de gestion
+{% endblock %}
+
+
+{% block content %}
+	<div class="h-[93vh] w-[60%] flex items-center flex-col " x-data="{item: ''}">
+		<div class=" h-10 w-[90%] flex items-center justify-center flex-col">
+			<h1 class="font-semibold">Zone d'édition des éléments</h1>
+
+		</div>
+		<fieldset class="w-[100%] ">
+			<div class="flex flex-col h-[10vh] w-[100%] bg-gray-100 border-b rounded-t-lg shadow-md">
+				<div class=" h-[80%] w-[100%] flex justify-around ">
+					<div class="flex flex-col items-center justify-center">
+						<label for="atelier">Atelier</label>
+						<input type="radio" id="atelier" name="item" value="1" x-model="item">
+					</div>
+					<div class="flex flex-col items-center justify-center">
+						<label for="theme">Thèmes</label>
+						<input type="radio" id="theme" name="item" value="2" x-model="item">
+					</div>
+					<div class="flex flex-col items-center justify-center">
+						<label for="vacation">Vacation</label>
+						<input type="radio" id="vacation" name="item" value="3" x-model="item">
+					</div>
+				</div>
+				<div class="h-[20%] w-[100%] flex items-center justify-center">
+					{% for message in app.flashes %}
+						<h1 class="  w-[100%] text-center bg-red-300 border h-[100%] flex items-center justify-center border-red-400 ">{{message[0]}}</h1>
+					{% endfor %}
+				</div>
+			</div>
+		</fieldset>
+		<div
+			class="w-[100%] bg-gray-50 h-[70vh] rounded-b-lg shadow-md flex items-center justify-center ">
+			<!-- Ajout d'un atelier -->
+			<div id="1" class="flex items-center justify-center w-[100%] h-[100%]" x-show="item == $el.id">
+				<form action="/admin/ajout-atelier" method="POST" class="h-[90%] w-[100%]">
+					<div class="flex flex-col items-center justify-around w-[100%] h-[70%]">
+						<h1 class="h-[10%] font-semibold uppercase text-lg text-[#FEC816]">Ajout d'un atelier</h1>
+						<div class="flex flex-col  h-[15%] w-[30%] items-center justify-around">
+							<label for="libelle" class="text-left font-semibold w-[80%]">Nom de l'atelier:</label>
+							<input type="text" required id="libelle" name="libelle" class="w-[80%] h-[60%] rounded-md shadow-md border indent-2" placeholder="Atelier">
+						</div>
+						<div class="flex flex-col  h-[15%] w-[30%] items-center justify-around">
+							<label for="nb_place" class="text-left font-semibold w-[80%]">Nombre de place maxi:</label>
+							<input type="number" required id="nb_place" name="nb_place" class="w-[80%] h-[60%] rounded-md shadow-md border indent-2" placeholder="Nb de place">
+						</div>
+						<div class="flex flex-col items-center justify-center h-[20%] w-[50%]">
+							<input type="submit" value="Sauvegarder" class="cursor-pointer bg-green-400 h-10 w-32 rounded-md hover:scale-105 duration-200 hover:bg-green-500 text-white font-semibold">
+						</div>
+					</div>
+				</form>
+			</div>
+			<!-- Ajout d'un theme -->
+			<div id="2" class="flex items-center justify-center w-[100%] h-[100%]" x-show="item == $el.id">
+				<form action="/admin/ajout-theme" method="POST" class="h-[90%] w-[100%]">
+					<div class="flex flex-col items-center justify-around w-[100%] h-[70%]">
+						<h1 class="h-[10%] font-semibold uppercase text-lg text-[#FEC816]">Ajout d'un thème</h1>
+						<div class="flex flex-col  h-[15%] w-[30%] items-center justify-around">
+							<label for="atelier" class="text-left font-semibold w-[80%]">Nom de l'atelier:</label>
+							<select name="id-atelier" id="atelier" class="w-[80%] h-[60%] rounded-md shadow-md border indent-2 bg-white">
+								{% for atelier in ateliers %}
+									<option value="{{atelier.getId()}}">{{atelier.getLibelle()}}</option>
+								{% endfor %}
+							</select>
+						</div>
+						<div class="flex flex-col  h-[15%] w-[30%] items-center justify-around">
+							<label for="libelle_theme" class="text-left font-semibold w-[80%]">Libelle Thème:</label>
+							<input type="text" required id="libelle_theme" name="libelle_theme" class="w-[80%] h-[60%] rounded-md shadow-md border indent-2" placeholder="Libelle du thème">
+						</div>
+						<div class="flex flex-col items-center justify-center h-[20%] w-[50%]">
+							<input type="submit" value="Sauvegarder" class="cursor-pointer bg-green-400 h-10 w-32 rounded-md hover:scale-105 duration-200 hover:bg-green-500 text-white font-semibold">
+						</div>
+					</div>
+				</form>
+			</div>
+			<!-- Ajout d'une vacation -->
+			<div id="3" class="flex items-center justify-center w-[100%] h-[100%]" x-show="item == $el.id">
+				<form action="/admin/ajout-vacation" method="POST" class="h-[90%] w-[100%]">
+					<div class="flex flex-col items-center justify-around w-[100%] h-[70%]">
+						<h1 class="h-[10%] font-semibold uppercase text-lg text-[#FEC816]">Ajout d'une vacation</h1>
+						<div class="flex flex-col  h-[15%] w-[30%] items-center justify-around">
+							<label for="atelier" class="text-left font-semibold w-[80%]">Nom de l'atelier:</label>
+							<select name="id-atelier" id="atelier" class="w-[80%] h-[60%] rounded-md shadow-md border indent-2 bg-white">
+								{% for atelier in ateliers %}
+									<option value="{{atelier.getId()}}">{{atelier.getLibelle()}}</option>
+								{% endfor %}
+							</select>
+						</div>
+						<div class="flex flex-col  h-[15%] w-[30%] items-center justify-around">
+							<label for="debut" class="text-left font-semibold w-[80%]">Date heure début:</label>
+							<div class="w-[80%] h-[60%] flex flex-row">
+								<input type="date" required id="debut" name="date_debut" class="w-[50%] h-[100%] rounded-l-md shadow-md border text-center">
+								<input type="time" required id="debut" name="heure_debut" class="w-[50%] h-[100%] rounded-r-md shadow-md border text-center">
+							</div>
+						</div>
+						<div class="flex flex-col  h-[15%] w-[30%] items-center justify-around">
+							<label for="fin" class="text-left font-semibold w-[80%]">Date heure fin:</label>
+							<div class="w-[80%] h-[60%] flex flex-row">
+								<input type="date" required id="fin" name="date_fin" class="w-[50%] h-[100%] rounded-l-md shadow-md border text-center">
+								<input type="time" required id="fin" name="heure_fin" class="w-[50%] h-[100%] rounded-r-md shadow-md border text-center">
+							</div>
+						</div>
+						<div class="flex flex-col items-center justify-center h-[20%] w-[50%]">
+							<input type="submit" value="Sauvegarder" class="cursor-pointer bg-green-400 h-10 w-32 rounded-md hover:scale-105 duration-200 hover:bg-green-500 text-white font-semibold">
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<!-- <input type="text" required id="libelle" name="libelle" class="" placeholder="Atelier"> -->
+
+{% endblock %}

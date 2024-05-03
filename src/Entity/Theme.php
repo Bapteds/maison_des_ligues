@@ -3,41 +3,58 @@
 namespace App\Entity;
 
 use App\Repository\ThemeRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ThemeRepository::class)]
 class Theme
 {
+    /**
+     * Id Theme
+     */
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-
+    
+    /**
+     * Libelle Theme
+     */
     #[ORM\Column(length: 255)]
     private ?string $libelle = null;
-
-    #[ORM\ManyToMany(targetEntity: Atelier::class, mappedBy: 'themes')]
-    private Collection $ateliers;
-
-    public function __construct()
-    {
-        $this->ateliers = new ArrayCollection();
+    
+    /**
+     * Les ateliers de Theme
+     */
+    #[ORM\ManyToMany(mappedBy: 'themes', targetEntity: Atelier::class)]
+    private $ateliers;
+    
+    /**
+     * Créer une instance Theme
+     */
+    public function __construct() {
+        $this->ateliers = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
-
+    /**
+     * Retourne l'id Theme
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * Retourne le libellé Theme
+     */
     public function getLibelle(): ?string
     {
         return $this->libelle;
     }
 
-    public function setLibelle(string $libelle): self
+    /**
+     * Définit le libellé Theme
+     */
+    public function setLibelle(string $libelle): static
     {
         $this->libelle = $libelle;
 
@@ -45,32 +62,18 @@ class Theme
     }
 
     /**
-     * @return Collection<int, Atelier>
+     * Retourne l'atelier du Theme
      */
-    public function getAteliers(): Collection
-    {
+    public function getAtelier(){
         return $this->ateliers;
     }
 
-    public function addAtelier(Atelier $atelier): static
-    {
+
+    public function setAtelier(Atelier $atelier): self {
         if (!$this->ateliers->contains($atelier)) {
-            $this->ateliers->add($atelier);
-            $atelier->addTheme($this);
+            $this->ateliers[] = $atelier;
+            $atelier->setTheme($this);
         }
-
         return $this;
     }
-
-    public function removeAtelier(Atelier $atelier): static
-    {
-        if ($this->ateliers->removeElement($atelier)) {
-            $atelier->removeTheme($this);
-        }
-
-        return $this;
-    }
-
-
-
 }

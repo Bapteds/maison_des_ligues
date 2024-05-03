@@ -3,157 +3,139 @@
 namespace App\Entity;
 
 use App\Repository\AtelierRepository;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\Table;
 
 #[ORM\Entity(repositoryClass: AtelierRepository::class)]
-#[Table(name: 'atelier')]
 class Atelier
 {
+
+    /**
+     * Id Atelier
+     */
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private ?int $id;
 
-    #[ORM\Column(length: 255, name: 'libelle') ]
+    /**
+     * Libellé Atelier
+     */
+    #[ORM\Column(length: 255)]
     private ?string $libelle = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $nbPlaces = null;
+    /**
+     * Nombre de places maximum Atelier
+     */
+    #[ORM\Column]
+    private ?int $nbPlacesMaxi = null;
 
-
-    #[ORM\ManyToMany(targetEntity: Inscription::class, mappedBy: 'atelierInscrit')]
-    private Collection $inscriptions;
-
+    /**
+     * Les thèmes de l'Atelier
+     */
     #[ORM\ManyToMany(targetEntity: Theme::class, inversedBy: 'ateliers')]
-    private Collection $themes;
+    private $themes;
 
-    #[ORM\OneToMany(mappedBy: 'atelier', targetEntity: Vacation::class)]
-    private Collection $vacations;
+    /**
+     * Les vacations de l'Atelier
+     */
+    #[ORM\ManyToMany(inversedBy: 'ateliers', targetEntity: Vacation::class)]
+    private $vacations;
 
+    /**
+     * Les inscriptions de l'Atelier
+     */
+    #[ORM\ManyToMany(mappedBy: 'ateliers', targetEntity: Inscription::class)]
+    private $inscriptions;
 
+    /**
+     * Créer une instance Atelier
+     */
     public function __construct()
     {
-        $this->inscriptions = new ArrayCollection();
-        $this->themes = new ArrayCollection();
-        $this->vacations = new ArrayCollection();
+        $this->themes = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->vacations = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->inscriptions = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
+    /**
+     * Retourne l'id de l'Atelier
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * Retourne le libellé de l'Atelier
+     */
     public function getLibelle(): ?string
     {
         return $this->libelle;
     }
 
-    public function setLibelle(string $libelle): self
+    /**
+     * définit le libellé de l'Atelier
+     */
+    public function setLibelle(string $libelle): static
     {
         $this->libelle = $libelle;
 
         return $this;
     }
 
-    public function getNbPlaces(): ?int
-    {
-        return $this->nbPlaces;
-    }
-
-    public function setNbPlaces(int $nbPlaces): self
-    {
-        $this->nbPlaces = $nbPlaces;
-
-        return $this;
-    }
-
-
-
-
-        /**
-     * @return Collection<int, Inscription>
+    /**
+     * Retourne le nombre de places maximum de l'Atelier
      */
-    public function getInscriptions(): Collection
+    public function getNbPlacesMaxi(): ?int
     {
-        return $this->inscriptions;
+        return $this->nbPlacesMaxi;
     }
 
-    public function addInscription(Inscription $inscription): self
+    /**
+     * Définit le nombre de places de l'Atelier
+     */
+    public function setNbPlacesMaxi(int $nbPlacesMaxi): static
     {
-        if (!$this->inscriptions->contains($inscription)) {
-            $this->inscriptions->add($inscription);
-            $inscription->addAtelierInscrit($this);
-        }
-
-        return $this;
-    }
-
-    public function removeInscription(Inscription $inscription): self
-    {
-        if ($this->inscriptions->removeElement($inscription)) {
-            $inscription->removeAtelierInscrit($this);
-        }
-
-        return $this;
-    }
-    
-    public function __toString(){
-        return $this->libelle;
-    }
-
-
-    public function getThemes()
-    {
-        return $this->themes;
-    }
-
-    public function addTheme(Theme $theme): static
-    {
-        if (!$this->themes->contains($theme)) {
-            $this->themes->add($theme);
-        }
-
-        return $this;
-    }
-
-    public function removeTheme(Theme $theme): static
-    {
-        $this->themes->removeElement($theme);
+        $this->nbPlacesMaxi = $nbPlacesMaxi;
 
         return $this;
     }
 
     /**
-     * @return Collection<int, Vacation>
+     * Retourne les themes d'Atelier
+     */
+    public function getThemes(): Collection
+    {
+        return $this->themes;
+    }
+
+    /**
+     * Retourne les vacations
      */
     public function getVacations(): Collection
     {
         return $this->vacations;
     }
 
-    public function addVacation(Vacation $vacation): static
+    /**
+     * Ajoute l'atelier a la vacation
+     */
+    public function setVacation(Vacation $vacation): self
     {
         if (!$this->vacations->contains($vacation)) {
-            $this->vacations->add($vacation);
+            $this->vacations[] = $vacation;
             $vacation->setAtelier($this);
         }
-
         return $this;
     }
 
-    public function removeVacation(Vacation $vacation): static
+    public function setTheme(Theme $theme): self
     {
-        if ($this->vacations->removeElement($vacation)) {
-            // set the owning side to null (unless already changed)
-            if ($vacation->getAtelier() === $this) {
-                $vacation->setAtelier(null);
-            }
+        if (!$this->themes->contains($theme)) {
+            $this->themes[] = $theme;
+            $theme->setAtelier($this);
         }
-
         return $this;
     }
-
 }

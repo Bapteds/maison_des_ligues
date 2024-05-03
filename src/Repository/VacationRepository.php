@@ -2,8 +2,11 @@
 
 namespace App\Repository;
 
+use App\Entity\Atelier;
 use App\Entity\Vacation;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -16,28 +19,32 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class VacationRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+
+    private $manager;
+    
+    public function __construct(ManagerRegistry $registry, EntityManagerInterface $manager)
     {
+        $this->manager = $manager;
         parent::__construct($registry, Vacation::class);
     }
 
-    public function save(Vacation $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->persist($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
+    /**
+     * Permet de sauvegarder une vacation
+     *
+     * @param string $date_debut
+     * @param string $date_fin
+     * @param Atelier $atelier
+     * @return void
+     */
+    public function save(string $date_debut, string $date_fin, Atelier $atelier){
+        $vacation = new Vacation();
+        $vacation->setDateHeureDebut($date_debut);
+        $vacation->setDateHeureFin($date_fin);
+        $vacation->setAtelier($atelier);
+        $this->manager->persist($vacation);
+        $this->manager->flush();
     }
 
-    public function remove(Vacation $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->remove($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
 
 //    /**
 //     * @return Vacation[] Returns an array of Vacation objects

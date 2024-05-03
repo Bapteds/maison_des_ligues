@@ -4,6 +4,8 @@ namespace App\Repository;
 
 use App\Entity\Atelier;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -16,37 +18,23 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class AtelierRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+
+    private $entityManager;
+
+    public function __construct(ManagerRegistry $registry, EntityManagerInterface $manager)
     {
+        $this->entityManager = $manager;
         parent::__construct($registry, Atelier::class);
     }
 
-    public function save(Atelier $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->persist($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
+    public function save(int $nb_place, string $libelle){
+        $atelier = new Atelier();
+        $atelier->setLibelle($libelle);
+        $atelier->setNbPlacesMaxi($nb_place);
+        $this->entityManager->persist($atelier);
+        $this->entityManager->flush();
     }
 
-    public function remove(Atelier $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->remove($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
-    
-//    public function findAteliers(ManagerRegistry $doctrine): array
-//    {
-//        $manager = $doctrine->getManager();
-//        $sql= "select a.libelle,a.nbplaces from atelier a";
-//        $result = $manager->getConnexion()->prepare($sql);
-//        $result->fetchAll();
-//        return $result;
-//    }
 
 //    /**
 //     * @return Atelier[] Returns an array of Atelier objects

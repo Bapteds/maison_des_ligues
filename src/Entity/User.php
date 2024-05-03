@@ -6,38 +6,41 @@ use App\Entity\Inscription;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields: ['numlicence'], message: 'Il existe déjà un compte ayant ce numéro de licence.')]
-class User 
+class User implements UserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(name:'id')]
+    #[ORM\Column(name: 'id')]
     private ?int $id = null;
 
-    #[ORM\Column(name:'email', length: 180)]
+    #[ORM\Column(name: 'email', length: 180)]
     private ?string $email = null;
 
-    #[ORM\Column(name:'roles')]
-    private array $roles = [];
+    #[ORM\Column(name: 'roles')]
+    private array $roles;
 
     /**
      * @var string The hashed password
      */
-    #[ORM\Column(name:'password')]
+    #[ORM\Column(name: 'password')]
     private ?string $password = null;
 
-    #[ORM\Column(name:'numlicence', length: 255, unique: true)]
+    #[ORM\Column(name: 'numlicence', length: 255, unique: true)]
     private ?string $numlicence = null;
 
-    #[ORM\Column(name:'isVerified', type: 'boolean')]
+    #[ORM\Column(name: 'isVerified', type: 'boolean')]
     private $isVerified = false;
 
+    #[ORM\Column(length: 16, nullable: true)]
+    private ?string $valid_token = null;
+    /** 
     #[ORM\OneToOne(targetEntity: Inscription::class, cascade: ['persist', 'remove'], mappedBy: "licencie")]
     private ?Inscription $inscriptions = null;
-
+     */
     public function getId(): ?int
     {
         return $this->id;
@@ -78,17 +81,12 @@ class User
      */
     public function getRoles(): array
     {
-        $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_INSCRIT';
-
-        return array_unique($roles);
+        return (array) $this->roles;
     }
 
-    public function setRoles(array $roles): self
+    public function setRoles(string $roles): self
     {
-        $this->roles = $roles;
-
+        $this->roles[] = $roles;
         return $this;
     }
 
@@ -155,7 +153,7 @@ class User
     {
         return $this->email;
     }
-
+    /**
     public function getInscription(): ?Inscription
     {
         return $this->inscriptions;
@@ -164,6 +162,18 @@ class User
     public function setInscription(?Inscription $inscriptions): self
     {
         $this->inscriptions = $inscriptions;
+
+        return $this;
+    } */
+
+    public function getValidToken(): ?string
+    {
+        return $this->valid_token;
+    }
+
+    public function setValidToken(?string $valid_token): static
+    {
+        $this->valid_token = $valid_token;
 
         return $this;
     }
