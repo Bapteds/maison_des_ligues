@@ -12,7 +12,7 @@
 							<a href="/" class="hover:scale-110 duration-200 block py-2 px-3 text-gray-900 rounded hover:text-gray-300  md:border-0  md:p-0 ">Accueil</a>
 						</li>
 						<li>
-							<a href="#" class="hover:scale-110 duration-200 block py-2 px-3 text-gray-900 rounded hover:text-gray-300  md:border-0  md:p-0 ">S'inscrire</a>
+							<a href="{{ path('app_inscription') }}" class="hover:scale-110 duration-200 block py-2 px-3 text-gray-900 rounded hover:text-gray-300  md:border-0  md:p-0 ">S'inscrire</a>
 						</li>
 						{% if is_granted('ROLE_USER') %}
 							<li>

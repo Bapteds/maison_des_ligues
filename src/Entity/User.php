@@ -35,7 +35,7 @@ class User implements UserInterface
     #[ORM\Column(name: 'isVerified', type: 'boolean')]
     private $isVerified = false;
 
-    #[ORM\Column(length: 16, nullable: true)]
+    #[ORM\Column(length: 200, nullable: true)]
     private ?string $valid_token = null;
 
     #[ORM\Column(length: 255)]
