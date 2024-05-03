@@ -136,6 +136,11 @@ class Vacation
         return $this;
     }
 
+    /**
+     * Retourne une période de temps pour les vacations
+     *
+     * @return void
+     */
     public function getPeriodeVacation()
     {
         $periode = (substr($this->dateHeureDebut, 5, -3)) . ' -> ' . (substr($this->dateHeureFin, 5, -3));

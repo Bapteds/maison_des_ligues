@@ -33,6 +33,12 @@ class SecurityController extends AbstractController
         $this->mailer = $mailer;
     }
 
+    /**
+     * Permet de gérer le login
+     *
+     * @param AuthenticationUtils $authenticationUtils
+     * @return Response
+     */
     #[Route(path: '/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
@@ -51,6 +57,15 @@ class SecurityController extends AbstractController
         return $this->render('admin/auth/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
     }
 
+    /**
+     * Permet de gérer la création de compte
+     *
+     * @param Request $request
+     * @param UserRepository $repo
+     * @param EntityManagerInterface $manager
+     * @param HttpClientInterface $client
+     * @return Response
+     */
     #[Route(path: '/register', name: 'app_register')]
     public function register(Request $request, UserRepository $repo, EntityManagerInterface $manager, HttpClientInterface $client): Response
     {
@@ -67,7 +82,7 @@ class SecurityController extends AbstractController
                     } else {
                         $token = bin2hex(random_bytes(16));
                         $link = $this->generateUrl('app_route_confirm', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL);
-                        $password = password_hash($password,PASSWORD_DEFAULT);
+                        $password = password_hash($password, PASSWORD_DEFAULT);
                         $this->createUser($licencie, $password, $manager, $token);
                         $this->mailer->sendEmail('maisondesligues@gouv.fr', $licencie['mail'], 'Validation de compte', $link);
                     }
@@ -81,6 +96,13 @@ class SecurityController extends AbstractController
         }
     }
 
+    /**
+     * Permet d'envoyer un mail et de confirmer le compte
+     *
+     * @param Request $request
+     * @param UserRepository $repo
+     * @return void
+     */
     #[Route(path: '/confirm', name: 'app_route_confirm')]
     public function confirmAccount(Request $request, UserRepository $repo)
     {
@@ -92,49 +114,72 @@ class SecurityController extends AbstractController
         return $this->render('admin/auth/register.html.twig', ['error' => 'Une erreur est survenue, refaite une demande.']);
     }
 
-    #[Route(path: '/forgotpwd', name: 'app_forgot')]
-    public function forgotPassword(Request $request, UserRepository $repo, EntityManagerInterface $manager)
-    {
-        if ($request->isMethod('POST')) {
-            $numlicence = $request->get('licence_code');
-            $user = $this->getUserByLicence($numlicence,$repo);
-            if($user){
-                if(!$user->isVerified()){
-                    return $this->render('admin/auth/pwd.html.twig',['error' => 'Veuillez vérifier votre compte avant de réinitialiser votre mot de passe.']);
-                }elseif($user->isVerified()){
-                    $token = bin2hex(random_bytes(16));
-                    $link = $this->generateUrl('app_route_reset', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL);
-                    $user->setValidToken($token);
-                    $repo->save($user,true);
-                    $this->mailer->sendEmail('maisondesligues@gouv.fr', $user->getEmail(), 'Changement de mot de passe', $link);
-                }
-            }
-            return $this->render('admin/auth/pwd.html.twig',['error' => 'Si votre licence existe, vous recevrez un mail.']);
-        }
-    return $this->render('admin/auth/pwd.html.twig',['error' => null]);
-    }
+    /**
+     * Permet d'envoyer un mail pour réinitialiser le mot de passe de l'utilisateur 
+     *
+     * @param Request $request
+     * @param UserRepository $repo
+     * @param EntityManagerInterface $manager
+     * @return void
+     */
 
+     #[Route(path: '/forgotpwd', name: 'app_forgot')]
+     public function forgotPassword(Request $request, UserRepository $repo, EntityManagerInterface $manager)
+     {
+         if ($request->isMethod('POST')) {
+             $numlicence = $request->get('licence_code');
+             $user = $this->getUserByLicence($numlicence, $repo);
+             if ($user) {
+                 if (!$user->isVerified()) {
+                     return $this->render('admin/auth/pwd.html.twig', ['error' => 'Veuillez vérifier votre compte avant de réinitialiser votre mot de passe.']);
+                 } elseif ($user->isVerified()) {
+                     $token = bin2hex(random_bytes(16));
+                     $link = $this->generateUrl('app_route_reset', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL);
+                     $user->setValidToken($token);
+                     $repo->save($user, true);
+                     $this->mailer->sendEmail('maisondesligues@gouv.fr', $user->getEmail(), 'Changement de mot de passe', $link);
+                 }
+             }
+             return $this->render('admin/auth/pwd.html.twig', ['error' => 'Si votre licence existe, vous recevrez un mail.']);
+         }
+         return $this->render('admin/auth/pwd.html.twig', ['error' => null]);
+     }
+ 
+
+    /**
+     * Retourne la vue pour modifier le mot de passe, et permet aussi d'enregistrer la modification
+     *
+     * @param Request $request
+     * @param UserRepository $repo
+     * @return void
+     */
     #[Route(path: '/resetpwd', name: 'app_route_reset')]
-    public function resetpwd(Request $request, UserRepository $repo){
+    public function resetpwd(Request $request, UserRepository $repo)
+    {
         $token = $request->get('token');
-        if($request->isMethod('POST')){
+        if ($request->isMethod('POST')) {
             $password = $request->request->get('password');
-            if($password == $request->request->get('confirmation')){ 
-                $password = password_hash($password,PASSWORD_DEFAULT);
-                $repo->updatePassword($token,$password);
+            if ($password == $request->request->get('confirmation')) {
+                $password = password_hash($password, PASSWORD_DEFAULT);
+                $repo->updatePassword($token, $password);
+            } else {
+                return $this->render('admin/auth/changepwd.html.twig', ['error' => 'Les mots de passe ne correspondent pas.']);
             }
-            else{
-                return $this->render('admin/auth/changepwd.html.twig',['error' => 'Les mots de passe ne correspondent pas.']);
-            }
-        }
-        elseif(!$repo->isValidToken($token)){
-            return $this->render('admin/auth/changepwd.html.twig',['error' => null]);
+        } elseif (!$repo->isValidToken($token)) {
+            return $this->render('admin/auth/changepwd.html.twig', ['error' => null]);
         }
 
         return $this->redirectToRoute('app_login');
     }
 
-    private function getUserByLicence($numlicence, UserRepository $userRepo) 
+    /**
+     * Retourne un utilisateur grace à licence.
+     *
+     * @param [type] $numlicence
+     * @param UserRepository $userRepo
+     * @return User
+     */
+    private function getUserByLicence($numlicence, UserRepository $userRepo)
     {
         $user = $userRepo->findOneBy(['numlicence' => $numlicence]);
         return $user;
@@ -207,7 +252,11 @@ class SecurityController extends AbstractController
         $manager->flush();
     }
 
-
+    /**
+     * Permet de se déconnecter
+     *
+     * @return void
+     */
     #[Route(path: '/logout', name: 'app_logout')]
     public function logout(): void
     {

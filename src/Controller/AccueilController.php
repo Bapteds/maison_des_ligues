@@ -16,7 +16,13 @@ use Symfony\Component\Routing\Annotation\Route;
 class AccueilController extends AbstractController
 {
 
-
+/**
+ * Retourne la vue de la page d'acceuil
+ *
+ * @param ManagerRegistry $doctrine
+ * @param Mailer $mailer
+ * @return Response
+ */
     #[Route('/', name: 'app_accueil')]
     public function index(ManagerRegistry $doctrine, Mailer $mailer): Response
     {

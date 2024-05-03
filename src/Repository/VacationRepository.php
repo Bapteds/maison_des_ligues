@@ -28,6 +28,14 @@ class VacationRepository extends ServiceEntityRepository
         parent::__construct($registry, Vacation::class);
     }
 
+    /**
+     * Permet de sauvegarder une vacation
+     *
+     * @param string $date_debut
+     * @param string $date_fin
+     * @param Atelier $atelier
+     * @return void
+     */
     public function save(string $date_debut, string $date_fin, Atelier $atelier){
         $vacation = new Vacation();
         $vacation->setDateHeureDebut($date_debut);

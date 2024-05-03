@@ -11,6 +11,12 @@ use Symfony\Component\Security\Http\Event\CheckPassportEvent;
 class isUserValid implements EventSubscriberInterface
 {
 
+    /**
+     * Permet de créer le passport pour la connection
+     *
+     * @param CheckPassportEvent $event
+     * @return void
+     */
     public function onCheckPassport(CheckPassportEvent $event)
     {
         $passport = $event->getPassport();

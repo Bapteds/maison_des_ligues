@@ -18,10 +18,12 @@ class AdminController extends AbstractController
 {
 
 
-    public function __construct()
-    {
-    }
-
+    /**
+     * Retourne la page qui permet de choisir le type d'élément à ajouter
+     *
+     * @param ManagerRegistry $doctrine
+     * @return Response
+     */
     #[Route('/admin/edit', name: 'app_admin')]
     public function index(ManagerRegistry $doctrine): Response
     {
@@ -30,6 +32,12 @@ class AdminController extends AbstractController
         return $this->render('admin/crud/index.html.twig', ['ateliers' => $ateliers]);
     }
 
+    /**
+     * Retourne la page qui permet d'ajouter un atelier
+     * @param Request $request
+     * @param AtelierRepository $repo
+     * @return void
+     */
     #[Route('/admin/ajout-atelier', name: 'add_atelier')]
     public function add_atelier(Request $request, AtelierRepository $repo)
     {
@@ -49,6 +57,14 @@ class AdminController extends AbstractController
         }
     }
 
+    /**
+     * Retourne la page qui permet d'ajouter un thème
+     *
+     * @param Request $request
+     * @param ThemeRepository $repo
+     * @param ManagerRegistry $doctrine
+     * @return void
+     */
     #[Route('/admin/ajout-theme', name: 'add_theme')]
     public function add_theme(Request $request, ThemeRepository $repo, ManagerRegistry $doctrine)
     {
@@ -71,6 +87,14 @@ class AdminController extends AbstractController
         }
     }
 
+    /**
+     * Retourne la page qui permet d'ajouter une vacation
+     *
+     * @param Request $request
+     * @param VacationRepository $repo
+     * @param ManagerRegistry $doctrine
+     * @return void
+     */
     #[Route('/admin/ajout-vacation', name: 'add_vacation')]
     public function add_vacation(Request $request, VacationRepository $repo, ManagerRegistry $doctrine)
     {
@@ -99,6 +123,13 @@ class AdminController extends AbstractController
         }
     }
 
+    /**
+     * Retourne la page qui permet de modifier une vacation
+     *
+     * @param Request $request
+     * @param ManagerRegistry $doctrine
+     * @return void
+     */
     #[Route('/admin/edit-vacation', name: 'select_atelier')]
     public function selectAtelier(Request $request, ManagerRegistry $doctrine)
     {
@@ -109,6 +140,9 @@ class AdminController extends AbstractController
         return $this->render('admin/crud/edit.html.twig', ['ateliers' => $ateliers, 'vacations' => null, 'vacation' => null]);
     }
 
+    /**
+     * Retourne la page qui permet de choisir une vacation
+     */
     #[Route('/admin/edit-vacation/{idatelier}/vacation', name: 'select_vacation')]
     public function selectVacation(int $idatelier, Request $request, ManagerRegistry $doctrine)
     {
@@ -122,6 +156,9 @@ class AdminController extends AbstractController
         return $this->render('admin/crud/edit.html.twig', ['ateliers' => null, 'vacations' => $vacations, 'vacation' => null]);
     }
 
+    /**
+     * Permet de retourner la page de modification d'une vacation, mais aussi de le mettre à jour
+     */
     #[Route('/admin/edit-vacation/{idatelier}/vacation/{idvacation}', name: 'edit_vacation')]
     public function editVacation(int $idatelier, int $idvacation, Request $request, ManagerRegistry $doctrine)
     {

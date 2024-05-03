@@ -37,7 +37,12 @@ class LoginFormAuthAuthenticator extends AbstractLoginFormAuthenticator
         $this->userRepo = $userRepo;
     }
 
-    
+    /**
+     * Permet de vérifier que l'utilisateur à saissi le bon mot de passe
+     *
+     * @param Request $request
+     * @return Passport
+     */
     public function authenticate(Request $request): Passport
     {
         $licence = $request->request->get('licence_code');
@@ -45,14 +50,14 @@ class LoginFormAuthAuthenticator extends AbstractLoginFormAuthenticator
 
         //$request->getSession()->set(Security::LAST_USERNAME, $email);
         return new Passport(
-            new UserBadge($licence,function($userId){
-                $user = $this->userRepo->findOneBy(['numlicence'=>$userId]);
+            new UserBadge($licence, function ($userId) {
+                $user = $this->userRepo->findOneBy(['numlicence' => $userId]);
                 return $user;
             }),
-            new CustomCredentials(function($credential,User $user) {
-                return password_verify($credential,$user->getPassword());
+            new CustomCredentials(function ($credential, User $user) {
+                return password_verify($credential, $user->getPassword());
             }, $password)
-            
+
         );
         new CsrfTokenBadge('authenticate', $request->request->get('_csrf_token'));
     }
@@ -68,6 +73,4 @@ class LoginFormAuthAuthenticator extends AbstractLoginFormAuthenticator
     {
         return $this->urlGenerator->generate(self::LOGIN_ROUTE);
     }
-
-
 }
