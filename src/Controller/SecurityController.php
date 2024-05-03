@@ -242,6 +242,7 @@ class SecurityController extends AbstractController
     private function createUser(array $licencie, string $password, EntityManager $manager, $token)
     {
         $user = new User();
+        dd($licencie);
         $user->setEmail($licencie['mail']);
         $user->setRoles('ROLE_INSCRIT');
         $user->setPassword($password);

@@ -47,7 +47,7 @@ class Inscription
      * Le compte d'Inscription
      */
     #[ORM\ManyToOne(inversedBy: 'inscription')]
-    private ?Compte $compte = null;
+    private ?User $user = null;
 
     /**
      * Retourne l'id d'Inscription
