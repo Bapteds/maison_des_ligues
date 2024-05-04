@@ -23,6 +23,9 @@ class User implements UserInterface
     #[ORM\Column(name: 'roles')]
     private array $roles;
 
+    #[ORM\OneToOne(targetEntity: Inscription::class, cascade: ['persist', 'remove'], inversedBy: "user")]
+    private ?Inscription $inscription = null;
+
     /**
      * @var string The hashed password
      */
@@ -279,6 +282,18 @@ class User implements UserInterface
     public function setTel(string $tel): static
     {
         $this->tel = $tel;
+
+        return $this;
+    }
+
+    public function getInscription(): ?Inscription
+    {
+        return $this->inscription;
+    }
+
+    public function setInscription(?Inscription $inscription): static
+    {
+        $this->inscription = $inscription;
 
         return $this;
     }

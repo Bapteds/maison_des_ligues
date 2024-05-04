@@ -535,6 +535,26 @@ insert into vacation (atelier_id,date_heure_debut, date_heure_fin) values(6,'202
 insert into vacation (atelier_id,date_heure_debut, date_heure_fin) values(6,'2024-09-09 09:00:00', '2024-09-09 10:30:00');
 insert into vacation (atelier_id,date_heure_debut, date_heure_fin) values(6,'2024-09-09 11:00:00', '2024-09-09 12:30:00');
 
+insert into restauration(date_restauration,type_repas) VALUES('2024-09-08','Déjeuner');
+insert into restauration(date_restauration,type_repas) VALUES('2024-09-08','Diner');
+insert into restauration(date_restauration,type_repas) VALUES('2024-09-09','Déjeuner');
+
+insert into nuite(categorie_id,hotel_id,datenuitee) VALUES(1,1,'2024-09-07');
+insert into nuite(categorie_id,hotel_id,datenuitee) VALUES(1,2,'2024-09-07');
+insert into nuite(categorie_id,hotel_id,datenuitee) VALUES(2,1,'2024-09-07');
+insert into nuite(categorie_id,hotel_id,datenuitee) VALUES(2,2,'2024-09-07');
+
+insert into nuite(categorie_id,hotel_id,datenuitee) VALUES(1,1,'2024-09-08');
+insert into nuite(categorie_id,hotel_id,datenuitee) VALUES(1,2,'2024-09-08');
+insert into nuite(categorie_id,hotel_id,datenuitee) VALUES(2,1,'2024-09-08');
+insert into nuite(categorie_id,hotel_id,datenuitee) VALUES(2,2,'2024-09-08');
+
+insert into nuite(categorie_id,hotel_id,datenuitee) VALUES(1,1,'2024-09-09');
+insert into nuite(categorie_id,hotel_id,datenuitee) VALUES(1,2,'2024-09-09');
+insert into nuite(categorie_id,hotel_id,datenuitee) VALUES(2,1,'2024-09-09');
+insert into nuite(categorie_id,hotel_id,datenuitee) VALUES(2,2,'2024-09-09');
+
+
 drop DATABaSE mdl;
 CREATE DATABASE mdl;
 use mdl;

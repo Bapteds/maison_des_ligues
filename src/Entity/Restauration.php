@@ -56,9 +56,9 @@ class Restauration
     /**
      * Retourne la date restauration de Restauration
      */
-    public function getDateRestauration(): ?\DateTimeInterface
+    public function getDateRestauration(): ?String
     {
-        return $this->dateRestauration;
+        return $this->dateRestauration->format('Y-m-d');
     }
 
     /**
@@ -86,6 +86,15 @@ class Restauration
     {
         $this->typeRepas = $typeRepas;
 
+        return $this;
+    }
+
+    public function setInscription(Inscription $inscription)
+    {
+        if (!$this->inscriptions->contains($inscription)) {
+            $this->inscriptions[] = $inscription;
+            $inscription->setRestauration($this);
+        }
         return $this;
     }
 }

@@ -40,7 +40,7 @@ class Inscription
     /**
      * Les nuités d'Inscription
      */
-    #[ORM\OneToMany(mappedBy: 'inscription', targetEntity: Nuite::class)]
+    #[ORM\ManyToMany(mappedBy: 'inscriptions', targetEntity: Nuite::class)]
     private ?Collection $nuites;
 
     /**
@@ -49,6 +49,16 @@ class Inscription
     #[ORM\ManyToOne(inversedBy: 'inscription')]
     private ?User $user = null;
 
+    #[ORM\Column]
+    private ?bool $estPaye = null;
+
+
+    public function __construct()
+    {
+        $this->restaurations = new ArrayCollection();
+        $this->ateliers = new ArrayCollection();
+        $this->nuites = new ArrayCollection();
+    }
     /**
      * Retourne l'id d'Inscription
      */
@@ -73,5 +83,68 @@ class Inscription
         $this->dateInscription = $dateInscription;
 
         return $this;
+    }
+
+    public function setAtelier(Atelier $atelier)
+    {
+        if (!$this->ateliers->contains($atelier)) {
+            $this->ateliers->add($atelier);
+        }
+
+        return $this;
+    }
+
+    public function setRestauration(Restauration $restauration)
+    {
+        if (!$this->restaurations->contains($restauration)) {
+            $this->restaurations[] = $restauration;
+            $restauration->setInscription($this);
+        }
+        return $this;
+    }
+
+    public function setUser(User $user): static
+    {
+        // set the owning side of the relation if necessary
+        if ($user->getInscription() !== $this) {
+            $user->setInscription($this);
+        }
+
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function setNuite(Nuite $nuite)
+    {
+        if (!$this->nuites->contains($nuite)) {
+            $this->nuites->add($nuite);
+            $nuite->setInscription($this);
+        }
+        return $this;
+    }
+
+    public function isEstPaye(): ?bool
+    {
+        return $this->estPaye;
+    }
+
+    public function setEstPaye(bool $estPaye): static
+    {
+        $this->estPaye = $estPaye;
+
+        return $this;
+    }
+
+    public function getAteliers(){
+        return $this->ateliers;
+    }
+
+    public function getNuites(){
+        return $this->nuites;
+    }
+
+    public function getRestaurations(){
+        return $this->restaurations;
     }
 }
