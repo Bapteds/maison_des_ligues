@@ -7,6 +7,7 @@ use App\Entity\Inscription;
 use App\Entity\Nuite;
 use App\Entity\Proposer;
 use App\Entity\Restauration;
+use App\Entity\User;
 use App\Services\Mailer;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
@@ -39,58 +40,112 @@ class InscriptionController extends AbstractController
     public function index(Request $request): Response
     {
         $user = $this->getUser();
-
-        if ($request->isMethod('POST')) {
-            $params = $request->request->all();
-            if (!empty($params)) {
-                $params = $this->sortParams($params);
-                $params = $this->retriveValueFromIds($params);
-                if ($this->doVerifDonnees($params)) {
-                    $this->saveInscription($params);
-                    $link = $this->generateUrl('app_validation', ['id_user' => $user->getId(), 'id_inscription' => $user->getInscription()->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
-                    $this->mailer->sendEmail('maisondesligues@gouv.fr', $user->getEmail(), 'Votre demande est en attente.', $link);
-                } else {
-                    $this->addFlash('error', 'Formulaire non valide, veuillez recommencer.');
-                    return $this->redirectToRoute('app_inscription');
+        if (empty($user->getInscription())) {
+            if ($request->isMethod('POST')) {
+                $params = $request->request->all();
+                if (!empty($params)) {
+                    $params = $this->sortParams($params);
+                    $params = $this->retriveValueFromIds($params);
+                    if ($this->doVerifDonnees($params)) {
+                        $this->saveInscription($params);
+                        $link = $this->generateUrl('app_validation', ['id_user' => $user->getId(), 'id_inscription' => $user->getInscription()->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
+                        $this->mailer->sendEmail('maisondesligues@gouv.fr', $user->getEmail(), 'Votre demande est en attente.', $link);
+                    } else {
+                        $this->addFlash('error', 'Formulaire non valide, veuillez recommencer.');
+                        return $this->redirectToRoute('app_inscription');
+                    }
                 }
+                $inscription = $this->manager->getRepository(Inscription::class)->findOneBy(['user' => $user->getId()]);
+                return $this->redirectToRoute('app_validation', ['id_user'=>$user->getId(), 'id_inscription'=>$inscription->getId()]);
+                //$this->createInscription($params,$managerInt);
+
+
+            } else {
+                // Partie Affichage pour la vue
+                $qualite = $this->qualiteApi($user->getIdqualite());
+                $ateliers = $this->manager->getRepository(Atelier::class)->findAll(); // Je veux que ceux qui ont de la place !!
+                $nuite = $this->manager->getRepository(Nuite::class)->findBy([], ['hotel' => 'ASC']);
+                return $this->render('inscription/index.html.twig', ['user' => $user, 'qualite' => $qualite, 'ateliers' => $ateliers, 'nuite' => $nuite]);
             }
-            return $this->redirectToRoute('app_inscription');
-            //$this->createInscription($params,$managerInt);
-
-
-        } else {
-            // Partie Affichage pour la vue
-            $qualite = $this->qualiteApi($user->getIdqualite());
-            $ateliers = $this->manager->getRepository(Atelier::class)->findAll(); // Je veux que ceux qui ont de la place !!
-            $nuite = $this->manager->getRepository(Nuite::class)->findBy([], ['hotel' => 'ASC']);
-            return $this->render('inscription/index.html.twig', ['user' => $user, 'qualite' => $qualite, 'ateliers' => $ateliers, 'nuite' => $nuite]);
+        }elseif($user->getInscription()->isEstPaye() == false){
+            $inscription = $this->manager->getRepository(Inscription::class)->findOneBy(['user' => $user->getId()]);
+            return $this->redirectToRoute('app_validation',['id_user'=>$user->getId(), 'id_inscription'=>$inscription->getId()]);
         }
+        $this->addFlash('error', 'Vous possedez déjà une inscription');
+        return $this->redirectToRoute('app_accueil');
     }
 
     #[Route('/validation', name: 'app_validation')]
     public function validation(Request $request): Response
     {
-        if ($request->isMethod('POST')) {
-        } else {
-            $user = $this->getUser();
+        $idUser = $request->get('id_user');
+        $idInscription = $request->get('id_inscription');
+        $inscription = $this->manager->getRepository(Inscription::class)->findOneBy(['user' => $idUser, 'id' => $idInscription]);
+        $user = $this->getUser();
 
-            $idUser = $request->get('id_user');
-            $idInscription = $request->get('id_inscription');
-            if ($idUser != $user->getId()) {
-                return $this->redirectToRoute('app_accueil');
+        if ($user->getInscription() && !$user->getInscription()->isEstPaye() ){
+
+            if ($request->isMethod('POST')) {
+                if ($this->checKbonUser($idInscription, $idUser, $user)) {
+                    $inscription->setEstPaye(true);
+                    $this->doctrine->flush();
+
+                    $link = $this->generateUrl('app_voir', ['iduser' => $user->getId(), 'idinscription' => $user->getInscription()->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
+                    $this->mailer->sendEmail('maisondesligues@gouv.fr', $user->getEmail(), 'Votre inscription est validée.', 'Cliquez sur le lien, pour la visualiser.' . $link);
+                    $this->addFlash('success', ' Inscription validée !');
+                    return $this->redirectToRoute('app_accueil');
+                } else {
+                    return $this->redirectToRoute('app_accueil');
+                }
+            } else {
+                if ($this->checKbonUser($idInscription, $idUser, $user)) {
+                    $qualite = $this->qualiteApi($user->getIdqualite());
+                    $ateliers = $this->manager->getRepository(Atelier::class)->findAll(); // Je veux que ceux qui ont de la place !!
+                    $nuite = $this->manager->getRepository(Nuite::class)->findBy([], ['hotel' => 'ASC']);
+                    $inscription = $this->manager->getRepository(Inscription::class)->findOneBy(['user' => $idUser, 'id' => $idInscription]);
+                    $montant = $this->calculerMontant($inscription);
+                    return $this->render('inscription/validation.html.twig', ['user' => $user, 'qualite' => $qualite, 'inscription' => $inscription, 'montant' => $montant]);
+                } else {
+                    return $this->redirectToRoute('app_accueil');
+                }
             }
-            if ($user->getInscription()->getId() != $idInscription) {
-                return $this->redirectToRoute('app_accueil');
-            }
+        }
+        $this->addFlash('error', 'Vous possedez déjà une inscription');
+        return $this->redirectToRoute('app_accueil');
+    }
+
+    #[Route('/inscription/{iduser}/{idinscription}', name: 'app_voir')]
+    public function voirInscription(Request $request, int $iduser, int $idinscription)
+    {
+        $user = $this->getUser();
+        if ($this->checKbonUser($idinscription, $iduser, $user)) {
             $qualite = $this->qualiteApi($user->getIdqualite());
-            $ateliers = $this->manager->getRepository(Atelier::class)->findAll(); // Je veux que ceux qui ont de la place !!
-            $nuite = $this->manager->getRepository(Nuite::class)->findBy([], ['hotel' => 'ASC']);
-            $inscription = $this->manager->getRepository(Inscription::class)->findOneBy(['user' => $idUser, 'id' => $idInscription]);
+            $inscription = $this->manager->getRepository(Inscription::class)->findOneBy(['user' => $iduser, 'id' => $idinscription]);
             $montant = $this->calculerMontant($inscription);
-            return $this->render('inscription/validation.html.twig', ['user' => $user, 'qualite' => $qualite, 'inscription' => $inscription, 'montant' => $montant]);
+            return $this->render('inscription/voir.html.twig', ['user' => $user, 'qualite' => $qualite, 'inscription' => $inscription, 'montant' => $montant]);
+        } else {
+            return $this->redirectToRoute('app_accueil');
         }
     }
 
+    /**
+     * Permet de vérifier que l'utilisateur soit bien le bon
+     *
+     * @param integer $idInscription
+     * @param integer $idUser
+     * @param User $user
+     * @return void
+     */
+    private function checKbonUser(int $idInscription, int $idUser, User $user)
+    {
+        if ($idUser != $user->getId()) {
+            return false;
+        }
+        if ($user->getInscription()->getId() != $idInscription) {
+            return false;
+        }
+        return true;
+    }
 
     /**
      * Permet de retourner le montant total
@@ -117,14 +172,14 @@ class InscriptionController extends AbstractController
                 if ($nuite->getHotel()->getId() == 2) {
                     if ($nuite->getCategorieChambre()->getId() == 1) {
                         $montant += 70;
-
                     }
                     if ($nuite->getCategorieChambre()->getId() == 2) {
                         $montant += 80;
                     }
                 }
             }
-        }return $montant;
+        }
+        return $montant;
     }
 
 

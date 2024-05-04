@@ -4,6 +4,11 @@
 {% endblock %}
 
 {% block content %}
+	{% for message in app.flashes %}
+		<script>
+			alert("{{ message[0] }}")
+		</script>
+	{% endfor %}
 	<form method="post">
 		<div class="flex flex-col items-center justify-around h-[50vh] w-96 bg-gray-50 shadow-xl rounded-lg">
 			<div class="h-[20%] w-full flex-col flex items-center justify-center font-semibold uppercase text-2xl">

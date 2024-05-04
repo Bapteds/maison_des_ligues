@@ -109,7 +109,8 @@ class SecurityController extends AbstractController
         $token = $request->get('token');
         $isValid = $repo->verifyUser($token);
         if ($isValid) {
-            return $this->render('admin/auth/login.html.twig', ['error' => 'Compte validée, vous pouvez vous connecter.']);
+            $this->addFlash('success','Compte valide, vous pouvez vous connecter');
+            return $this->redirectToRoute('app_login');
         }
         return $this->render('admin/auth/register.html.twig', ['error' => 'Une erreur est survenue, refaite une demande.']);
     }

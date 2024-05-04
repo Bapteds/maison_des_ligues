@@ -4,6 +4,9 @@
 {% endblock %}
 
 {% block content %}
+	{% for message in app.flashes %}
+		<script>alert("{{message[0]}}")</script>
+	{% endfor %}
 	<div class="h-[100%] items-center justify-between flex flex-col w-[100%]">
 		<div class="flex items-center justify-center w-[100%] h-[93vh] bg-gradient-to-b from-gray-100 to-gray-300">
 			<div class="flex justify-center pt-1  items-end h-[100%] w-[60%]  ">
@@ -81,7 +84,8 @@
 										</div>
 
 										<div class="flex flex-col justify-around h-full items-center w-[30%] border-2 rounded-md border-[#FEC816]">
-											<h1 class="w-[90%] text-left font-semibold pt-2">• Vacations </h1>
+											<h1 class="w-[90%] text-left font-semibold pt-2">• Vacations
+											</h1>
 											{% for vacation in atelier.getVacations() %}
 												<h1 class="text-sm w-[90%]">{{vacation.getPeriodeVacation()}}</h1>
 											{% endfor %}
@@ -114,12 +118,18 @@
 												{{hotel.getPnom()}}</h1>
 										</div>
 										<div class="w-[90%]">
-										<h1>{{hotel.getAdresse1()}} - {{hotel.getCp()}} | {{hotel.getVille()}}</h1>
+											<h1>{{hotel.getAdresse1()}}
+												-
+												{{hotel.getCp()}}
+												|
+												{{hotel.getVille()}}</h1>
 										</div>
 										<div class="w-[90%] flex flex-col ">
-										<h1 class="font-semibold">Contacts:</h1>
-										<h1 class="">• {{hotel.getTel()}}</h1>
-										<h1 class="">• {{hotel.getMail()}}</h1>
+											<h1 class="font-semibold">Contacts:</h1>
+											<h1 class="">•
+												{{hotel.getTel()}}</h1>
+											<h1 class="">•
+												{{hotel.getMail()}}</h1>
 										</div>
 									</div>
 								{% endfor %}
