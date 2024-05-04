@@ -23,6 +23,9 @@ class User implements UserInterface
     #[ORM\Column(name: 'roles')]
     private array $roles;
 
+    #[ORM\OneToOne(targetEntity: Inscription::class, cascade: ['persist', 'remove'], inversedBy: "user")]
+    private ?Inscription $inscription = null;
+
     /**
      * @var string The hashed password
      */
@@ -35,8 +38,29 @@ class User implements UserInterface
     #[ORM\Column(name: 'isVerified', type: 'boolean')]
     private $isVerified = false;
 
-    #[ORM\Column(length: 16, nullable: true)]
+    #[ORM\Column(length: 200, nullable: true)]
     private ?string $valid_token = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $nom = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $prenom = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $ville = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $adresse = null;
+
+    #[ORM\Column]
+    private ?int $idqualite = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $cp = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $tel = null;
     /** 
     #[ORM\OneToOne(targetEntity: Inscription::class, cascade: ['persist', 'remove'], mappedBy: "licencie")]
     private ?Inscription $inscriptions = null;
@@ -174,6 +198,102 @@ class User implements UserInterface
     public function setValidToken(?string $valid_token): static
     {
         $this->valid_token = $valid_token;
+
+        return $this;
+    }
+
+    public function getNom(): ?string
+    {
+        return $this->nom;
+    }
+
+    public function setNom(string $nom): static
+    {
+        $this->nom = $nom;
+
+        return $this;
+    }
+
+    public function getPrenom(): ?string
+    {
+        return $this->prenom;
+    }
+
+    public function setPrenom(string $prenom): static
+    {
+        $this->prenom = $prenom;
+
+        return $this;
+    }
+
+    public function getVille(): ?string
+    {
+        return $this->ville;
+    }
+
+    public function setVille(string $ville): static
+    {
+        $this->ville = $ville;
+
+        return $this;
+    }
+
+    public function getAdresse(): ?string
+    {
+        return $this->adresse;
+    }
+
+    public function setAdresse(string $adresse): static
+    {
+        $this->adresse = $adresse;
+
+        return $this;
+    }
+
+    public function getIdqualite(): ?int
+    {
+        return $this->idqualite;
+    }
+
+    public function setIdqualite(int $idqualite): static
+    {
+        $this->idqualite = $idqualite;
+
+        return $this;
+    }
+
+    public function getCp(): ?string
+    {
+        return $this->cp;
+    }
+
+    public function setCp(string $cp): static
+    {
+        $this->cp = $cp;
+
+        return $this;
+    }
+
+    public function getTel(): ?string
+    {
+        return $this->tel;
+    }
+
+    public function setTel(string $tel): static
+    {
+        $this->tel = $tel;
+
+        return $this;
+    }
+
+    public function getInscription(): ?Inscription
+    {
+        return $this->inscription;
+    }
+
+    public function setInscription(?Inscription $inscription): static
+    {
+        $this->inscription = $inscription;
 
         return $this;
     }

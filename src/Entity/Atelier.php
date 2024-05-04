@@ -138,4 +138,17 @@ class Atelier
         }
         return $this;
     }
+    public function setInscription(Inscription $inscription): self
+    {
+        if (!$this->inscriptions->contains($inscription)) {
+            $this->inscriptions[] = $inscription;
+            $inscription->setAtelier($this);
+        }
+        return $this;
+    }
+
+    public function getInscriptions(): Collection
+    {
+        return $this->inscriptions;
+    }
 }

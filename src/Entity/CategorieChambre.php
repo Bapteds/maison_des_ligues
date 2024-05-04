@@ -19,7 +19,7 @@ class CategorieChambre
     /**
      * Libellé catégorie de CategorieChambre
      */
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, name:'libelle_categorie')]
     private ?string $libelleCategorie = null;
 
     /**

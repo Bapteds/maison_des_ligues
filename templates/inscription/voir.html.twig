@@ -1,0 +1,117 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription
+{% endblock %}
+
+{% block content %}
+	<div
+		class="h-[93vh] w-[60%] shadow-lg rounded-lg flex flex-col items-center justify-around">
+		<!-- Titre -->
+		<div class="h-[5%] flex items-center justify-center w-[100%]">
+			<h1 class="text-[#FEC816] font-semibold italic text-3xl">Votre inscription</h1>
+		</div>
+		<!-- Information User -->
+		<div class="h-[35%] w-[98%] bg-gray-100 shadow-sm rounded-lg  border-2 border-gray-200 flex flex-col items-center justify-around">
+			<div class="h-[7%] text-xl w-[96%]  border-b-2 flex justify-start items-center font-semibold ">
+				<h1>Informations Utilisateur:</h1>
+			</div>
+			<div class="h-[90%] w-[100%] flex justify-around flex-row items-center">
+				<div class="h-[95%] w-[30%] flex flex-col items-center justify-around">
+					<div class="w-[93%] h-[31%]  border-b-2 justify-center flex flex-col">
+						<h1 class="text-lg font-semibold ">Nom:</h1>
+						<h2 class="text-md  italic">{{user.getNom() == null ? 'Aucune Information' : user.getNom()}}</h2>
+					</div>
+					<div class="w-[93%] h-[31%] border-b-2 justify-center flex flex-col">
+						<h1 class="text-lg font-semibold ">Prénom:</h1>
+						<h2 class="text-md  italic">{{user.getPrenom() == null ? 'Aucune Information' : user.getPrenom()}}</h2>
+					</div>
+					<div class="w-[93%] h-[31%]  justify-center flex flex-col">
+						<h1 class="text-lg font-semibold ">E-mail:</h1>
+						<h2 class="text-md  italic">{{user.getEmail() == null ? 'Aucune Information' : user.getEmail()}}</h2>
+					</div>
+
+				</div>
+				<div class="h-[95%] w-[30%] flex flex-col items-center justify-around">
+					<div class="w-[93%] h-[31%]  border-b-2 justify-center flex flex-col">
+						<h1 class="text-lg font-semibold ">Téléphone:</h1>
+						<h2 class="text-md  italic">{{user.getTel() == null ? 'Aucune Information' : user.getTel()}}</h2>
+					</div>
+					<div class="w-[93%] h-[31%] border-b-2 justify-center flex flex-col">
+						<h1 class="text-lg font-semibold ">Adresse:</h1>
+						<h2 class="text-md  italic">{{user.getAdresse() == null ? 'Aucune Information' : user.getAdresse()}}</h2>
+					</div>
+					<div class="w-[93%] h-[31%]  justify-center flex flex-col">
+						<h1 class="text-lg font-semibold ">Code postal:</h1>
+						<h2 class="text-md  italic">{{user.getCp() == null ? 'Aucune Information' : user.getCp()}}</h2>
+					</div>
+
+				</div>
+				<div class="h-[95%] w-[30%] flex flex-col items-center justify-around">
+					<div class="w-[93%] h-[31%]  border-b-2 justify-center flex flex-col">
+						<h1 class="text-lg font-semibold ">Ville:</h1>
+						<h2 class="text-md  italic">{{user.getVille() == null ? 'Aucune Information' : user.getVille()}}</h2>
+					</div>
+					<div class="w-[93%] h-[31%] border-b-2 justify-center flex flex-col">
+						<h1 class="text-lg font-semibold ">Qualite:</h1>
+						<h2 class="text-md  italic">{{qualite['libellequalite']}}</h2>
+					</div>
+					<div class="w-[93%] h-[31%]  justify-center flex flex-col">
+						<h1 class="text-lg font-semibold ">N° de licence:</h1>
+						<h2 class="text-md  italic">{{user.getNumlicence() == null ? 'Aucune Information' : user.getNumlicence()}}</h2>
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+		<div class="h-1 w-[98%] bg-[#FEC816] shadow-sm"></div>
+		<!-- Inscription User -->
+		<form class="h-[48%] w-[100%]  items-center justify-center" method="post" action="">
+			<div class="h-[80%] w-[100%] flex flex-row items-center justify-around ">
+				<div class="w-[31%] h-[95%] bg-gray-100 flex flex-col items-center justify-center ">
+					<div class="h-[10%] flex items-center justify-center">
+						<h1>Ateliers choisis</h1>
+					</div>
+					<div class="overflow-y-scroll h-[90%] w-[100%] flex flex-col items-center justify-center space-y-4 p-1">
+						{% for atelier in inscription.getAteliers() %}
+							<div class="w-[90%] h-12 indent-1 flex flex-row justify-between items-center bg-gray-200 shadow-md rounded-lg border-2 border-gray-300">
+								<h1>{{atelier.getLibelle()}}</h1>
+							</div>
+						{% endfor %}
+					</div>
+				</div>
+				<div class="w-[31%] h-[95%]  bg-gray-100 flex flex-col items-center justify-center">
+					<div class="h-[10%] flex items-center justify-center">
+						<h1>Hotels choisis</h1>
+					</div>
+					<div class="overflow-y-scroll h-[90%] w-[100%] flex flex-col items-center justify-center space-y-4 p-1">
+						{% for nuite in inscription.getNuites() %}
+							<div class="w-[90%] h-12 indent-1 flex flex-row justify-between items-center bg-gray-200 shadow-md rounded-lg border-2 border-gray-300">
+								<h1>{{nuite.getDatenuitee()}}  {{nuite.getCategorieChambre().getLibelleCategorie()}}</h1>
+							</div>
+						{% endfor %}
+					</div>
+				</div>
+				<div class="w-[31%] h-[95%]  bg-gray-100 flex flex-col items-center justify-center">
+					<div class="h-[10%] flex items-center justify-center">
+						<h1>Restauration choisis</h1>
+					</div>
+					<div class="overflow-y-scroll h-[90%] w-[100%] flex flex-col items-center justify-center space-y-4 p-1">
+						{% for restauration in inscription.getRestaurations() %}
+							<div class="w-[90%] h-12 indent-1 flex flex-row justify-between items-center bg-gray-200 shadow-md rounded-lg border-2 border-gray-300">
+								<h1>{{restauration.getDateRestauration()}}
+									:
+									{{restauration.getTypeRepas()}}</h1>
+							</div>
+						{% endfor %}
+					</div>
+				</div>
+			</div>
+			<div class="w-[100%] h-[20%] flex flex-row justify-around items-center">
+				<div class="w-[50%] h-[100%] flex items-center justify-center">
+					<h1 class="font-semibold"><span class="font-semibold text-[#FEC816] text-lg">Montant total :</span> {{montant}}€  </h1>
+				</div>
+			</div>
+		</form>
+	</div>
+{% endblock %}

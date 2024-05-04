@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\NuiteRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -38,8 +39,8 @@ class Nuite
     /**
      * Inscription Nuite
      */
-    #[ORM\ManyToOne(inversedBy: 'nuites')]
-    private ?Inscription $inscription = null;
+    #[ORM\ManyToMany(targetEntity: Inscription::class, inversedBy: 'nuites')]
+    private ?Collection $inscriptions;
 
     /**
      * Retourne l'id de Nuite
@@ -52,9 +53,9 @@ class Nuite
     /**
      * Retourne la date nuitée de Nuite
      */
-    public function getDatenuitee(): ?\DateTimeInterface
+    public function getDatenuitee(): ?String
     {
-        return $this->datenuitee;
+        return $this->datenuitee->format('Y-m-d');
     }
 
     /**
@@ -64,6 +65,25 @@ class Nuite
     {
         $this->datenuitee = $datenuitee;
 
+        return $this;
+    }
+
+    public function getHotel()
+    {
+        return $this->hotel;
+    }
+
+    public function getCategorieChambre()
+    {
+        return $this->categorie;
+    }
+
+    public function setInscription(Inscription $inscription)
+    {
+        if (!$this->inscriptions->contains($inscription)) {
+            $this->inscriptions[] = $inscription;
+            $inscription->setNuite($this);
+        }
         return $this;
     }
 }
