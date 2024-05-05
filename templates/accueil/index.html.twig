@@ -131,6 +131,12 @@
 											<h1 class="">•
 												{{hotel.getMail()}}</h1>
 										</div>
+										<div class="w-[90%] flex flex-col ">
+											<h1 class="font-semibold">Tarifs:</h1>
+											{% for proposition in hotel.getPropositions() %}
+												<h1>• <span class="font-semibold">{{proposition.getCategorieChambre().getLibelleCategorie()}}:</span> {{proposition.getTarifNuite()}}€</h1>
+											{% endfor %}
+										</div>	
 									</div>
 								{% endfor %}
 							</div>

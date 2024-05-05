@@ -56,23 +56,28 @@ class InscriptionController extends AbstractController
                     }
                 }
                 $inscription = $this->manager->getRepository(Inscription::class)->findOneBy(['user' => $user->getId()]);
-                return $this->redirectToRoute('app_validation', ['id_user'=>$user->getId(), 'id_inscription'=>$inscription->getId()]);
+                return $this->redirectToRoute('app_validation', ['id_user' => $user->getId(), 'id_inscription' => $inscription->getId()]);
                 //$this->createInscription($params,$managerInt);
 
 
             } else {
                 // Partie Affichage pour la vue
-                $qualite = $this->qualiteApi($user->getIdqualite());
-                $ateliers = $this->manager->getRepository(Atelier::class)->findAll(); // Je veux que ceux qui ont de la place !!
+                if ($user->getIdqualite()) {
+                    $qualite = $this->qualiteApi($user->getIdqualite());
+                } else {
+                    $qualite = null;
+                }
+                //$ateliers = $this->manager->getRepository(Atelier::class)->findAll(); // Je veux que ceux qui ont de la place !!
+                $ateliers = $this->getAteliersDispo();
                 $nuite = $this->manager->getRepository(Nuite::class)->findBy([], ['hotel' => 'ASC']);
                 return $this->render('inscription/index.html.twig', ['user' => $user, 'qualite' => $qualite, 'ateliers' => $ateliers, 'nuite' => $nuite]);
             }
-        }elseif($user->getInscription()->isEstPaye() == false){
+        } elseif ($user->getInscription()->isEstPaye() == false) {
             $inscription = $this->manager->getRepository(Inscription::class)->findOneBy(['user' => $user->getId()]);
-            return $this->redirectToRoute('app_validation',['id_user'=>$user->getId(), 'id_inscription'=>$inscription->getId()]);
+            return $this->redirectToRoute('app_validation', ['id_user' => $user->getId(), 'id_inscription' => $inscription->getId()]);
         }
-        $this->addFlash('error', 'Vous possedez déjà une inscription');
-        return $this->redirectToRoute('app_accueil');
+        //$this->addFlash('error', 'Vous possedez déjà une inscription');
+        return $this->redirectToRoute('app_voir', ['iduser' => $user->getId(), 'idinscription' => $user->getInscription()->getId()]);
     }
 
     #[Route('/validation', name: 'app_validation')]
@@ -83,7 +88,7 @@ class InscriptionController extends AbstractController
         $inscription = $this->manager->getRepository(Inscription::class)->findOneBy(['user' => $idUser, 'id' => $idInscription]);
         $user = $this->getUser();
 
-        if ($user->getInscription() && !$user->getInscription()->isEstPaye() ){
+        if ($user->getInscription() && !$user->getInscription()->isEstPaye()) {
 
             if ($request->isMethod('POST')) {
                 if ($this->checKbonUser($idInscription, $idUser, $user)) {
@@ -99,7 +104,11 @@ class InscriptionController extends AbstractController
                 }
             } else {
                 if ($this->checKbonUser($idInscription, $idUser, $user)) {
-                    $qualite = $this->qualiteApi($user->getIdqualite());
+                    if ($user->getIdqualite()) {
+                        $qualite = $this->qualiteApi($user->getIdqualite());
+                    } else {
+                        $qualite = null;
+                    }
                     $ateliers = $this->manager->getRepository(Atelier::class)->findAll(); // Je veux que ceux qui ont de la place !!
                     $nuite = $this->manager->getRepository(Nuite::class)->findBy([], ['hotel' => 'ASC']);
                     $inscription = $this->manager->getRepository(Inscription::class)->findOneBy(['user' => $idUser, 'id' => $idInscription]);
@@ -119,7 +128,11 @@ class InscriptionController extends AbstractController
     {
         $user = $this->getUser();
         if ($this->checKbonUser($idinscription, $iduser, $user)) {
-            $qualite = $this->qualiteApi($user->getIdqualite());
+            if ($user->getIdqualite()) {
+                $qualite = $this->qualiteApi($user->getIdqualite());
+            } else {
+                $qualite = null;
+            }
             $inscription = $this->manager->getRepository(Inscription::class)->findOneBy(['user' => $iduser, 'id' => $idinscription]);
             $montant = $this->calculerMontant($inscription);
             return $this->render('inscription/voir.html.twig', ['user' => $user, 'qualite' => $qualite, 'inscription' => $inscription, 'montant' => $montant]);
@@ -155,13 +168,28 @@ class InscriptionController extends AbstractController
      */
     private function calculerMontant(Inscription $inscription)
     {
-        $montant = 130;
+
+        $prix_repa = $this->getParameter('app.prix_repa');
+        $montant = $this->getParameter('app.prix_congre');
         if (count($inscription->getRestaurations()) > 0) {
             $montant += count($inscription->getRestaurations()) * 38;
         }
         if (count($inscription->getNuites())) {
             foreach ($inscription->getNuites() as $nuite) {
-                if ($nuite->getHotel()->getId() == 1) {
+                foreach ($nuite->getHotel()->getPropositions() as $proposition) {
+                    if($proposition->getHotels()->getId()==$nuite->getHotel()->getId()){
+                        if($proposition->getCategorieChambre()->getId() == $nuite->getCategorieChambre()->getId()){
+                            $montant += $proposition->getTarifNuite();
+                        }
+                    }
+                }
+            }
+            return $montant;
+        }
+    }
+
+
+    /** if ($nuite->getHotel()->getId() == 1) {
                     if ($nuite->getCategorieChambre()->getId() == 1) {
                         $montant += 95;
                     }
@@ -177,13 +205,7 @@ class InscriptionController extends AbstractController
                         $montant += 80;
                     }
                 }
-            }
-        }
-        return $montant;
-    }
-
-
-
+            } */
     /**
      * Permet de créer et d'enregistrer l'inscription
      *

@@ -61,7 +61,7 @@ class Hotel {
     /**
      * Les propositions de Hotel
      */
-    #[ORM\OneToMany(mappedBy: 'hotel', targetEntity: Proposer::class)]
+    #[ORM\OneToMany(mappedBy: 'hotels', targetEntity: Proposer::class)]
     public $propositions;
 
     /**
@@ -86,7 +86,7 @@ class Hotel {
 
     /**
      * Retourne les propostions
-     */
+     */ 
     public function getPropositions(){
         return $this->propositions;
     }
