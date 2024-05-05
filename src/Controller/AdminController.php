@@ -80,6 +80,7 @@ class AdminController extends AbstractController
                 return $this->redirectToRoute('app_admin');
             } else {
                 $repo->save($libelle, $atelier);
+                $this->addFlash('success', 'Thème crée');
                 return $this->redirectToRoute('app_admin');
             }
         } else {
@@ -112,6 +113,7 @@ class AdminController extends AbstractController
                     return $this->redirectToRoute('app_admin');
                 } else {
                     $repo->save($date_debut, $date_fin, $atelier);
+                    $this->addFlash('success', 'Vacation crée');
                     return $this->redirectToRoute('app_admin');
                 }
             } else {

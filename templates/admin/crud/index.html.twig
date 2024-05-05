@@ -5,6 +5,11 @@
 
 
 {% block content %}
+	{% for message in app.flashes %}
+		<script>
+			alert("{{ message[0] }}")
+		</script>
+	{% endfor %}
 	<div class="h-[93vh] w-[60%] flex items-center flex-col " x-data="{item: ''}">
 		<div class=" h-10 w-[90%] flex items-center justify-center flex-col">
 			<h1 class="font-semibold">Zone d'édition des éléments</h1>
