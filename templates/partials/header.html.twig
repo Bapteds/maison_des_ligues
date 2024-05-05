@@ -14,7 +14,7 @@
 						<li>
 							<a href="{{ path('app_inscription') }}" class="hover:scale-110 duration-200 block py-2 px-3 text-gray-900 rounded hover:text-gray-300  md:border-0  md:p-0 ">S'inscrire</a>
 						</li>
-						{% if is_granted('ROLE_USER') %}
+						{% if is_granted('ROLE_ADMIN') or is_granted('ROLE_USER') %}
 							<li>
 								<a href="/admin/edit" class="hover:scale-110 duration-200 block py-2 px-3 text-red-600 rounded hover:text-gray-300  md:border-0  md:p-0 ">Ajout</a>
 							</li>

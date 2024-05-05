@@ -172,9 +172,9 @@ class InscriptionController extends AbstractController
         $prix_repa = $this->getParameter('app.prix_repa');
         $montant = $this->getParameter('app.prix_congre');
         if (count($inscription->getRestaurations()) > 0) {
-            $montant += count($inscription->getRestaurations()) * 38;
+            $montant += count($inscription->getRestaurations()) * $prix_repa;
         }
-        if (count($inscription->getNuites())) {
+        if (count($inscription->getNuites())>0) {
             foreach ($inscription->getNuites() as $nuite) {
                 foreach ($nuite->getHotel()->getPropositions() as $proposition) {
                     if($proposition->getHotels()->getId()==$nuite->getHotel()->getId()){
@@ -184,8 +184,8 @@ class InscriptionController extends AbstractController
                     }
                 }
             }
-            return $montant;
         }
+        return $montant;
     }
 
 

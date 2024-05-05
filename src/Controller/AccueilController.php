@@ -30,7 +30,6 @@ class AccueilController extends AbstractController
         $hotels = $doctrine->getRepository(Hotel::class)->findAll();
         $ateliers = $doctrine->getRepository(Atelier::class)->findAll();
 
-
         return $this->render('accueil/index.html.twig', [
             'hotels' => $hotels,
             'ateliers' => $ateliers,
